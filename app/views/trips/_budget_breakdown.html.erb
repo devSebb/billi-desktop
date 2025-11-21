@@ -1,0 +1,35 @@
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-sm">
+    <p class="text-indigo-100 text-sm font-medium uppercase tracking-wider">Total Trip Cost</p>
+    <p class="text-4xl font-bold mt-1"><%= number_to_currency(budget&.total_trip_cost || 0) %></p>
+    <p class="mt-2 text-indigo-200 text-sm">For <%= pluralize(trip.travelers_count, 'person') %>, <%= (trip.end_date - trip.start_date).to_i %> nights</p>
+  </div>
+  
+  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+    <p class="text-gray-500 text-sm font-medium uppercase tracking-wider">Cost Per Person</p>
+    <p class="text-4xl font-bold text-gray-900 mt-1"><%= number_to_currency(budget&.per_person_cost || 0) %></p>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+  <% [[:lodging_total, "Lodging"], [:restaurants_total, "Food"], [:activities_total, "Activities"], [:drinks_total, "Nightlife"], [:shopping_total, "Shopping"], [:other_total, "Other"]].each do |field, label| %>
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+      <p class="text-gray-500 text-xs font-medium uppercase"><%= label %></p>
+      <p class="text-xl font-bold text-gray-900 mt-1"><%= number_to_currency(budget&.send(field) || 0) %></p>
+    </div>
+  <% end %>
+</div>
+
+<% if budget %>
+  <div class="mt-6 bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl border border-indigo-100">
+    <h3 class="flex items-center gap-2 text-indigo-800 font-bold mb-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+      </svg>
+      AI Budget Analysis
+    </h3>
+    <p class="text-indigo-900 text-sm leading-relaxed">
+      <%= AiBudgetExplainer.explain(trip, budget) %>
+    </p>
+  </div>
+<% end %>

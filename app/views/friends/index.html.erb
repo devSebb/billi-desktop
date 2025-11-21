@@ -1,0 +1,98 @@
+<% content_for :header_title, "Friends & Billing" %>
+
+<div class="max-w-6xl mx-auto">
+  <!-- Filter -->
+  <div class="flex justify-between items-center mb-8">
+    <div class="relative inline-block text-left">
+      <%= form_with url: friends_path, method: :get, class: "flex items-center gap-4" do |f| %>
+        <label class="text-sm font-medium text-gray-500">Trip:</label>
+        <% if @trips.any? %>
+          <%= f.select :trip_id, options_from_collection_for_select(@trips, :id, :name, @selected_trip&.id), {}, onchange: "this.form.submit()", class: "rounded-xl border-gray-200 py-2 pl-4 pr-10 text-brand-charcoal font-medium focus:ring-brand-teal focus:border-brand-teal" %>
+        <% else %>
+          <span class="text-gray-400">No trips available</span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @selected_trip %>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Balances -->
+      <div class="space-y-6">
+        <h3 class="text-xl font-bold text-brand-charcoal">Balances</h3>
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+           <% if @balances.present? %>
+             <div class="divide-y divide-gray-100">
+               <% @balances.each do |b| %>
+                 <div class="p-6 flex items-center justify-between">
+                   <div class="flex items-center gap-4">
+                      <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-500">
+                        <%= b[:participant].name&.first&.upcase || "?" %>
+                      </div>
+                      <div>
+                        <div class="font-bold text-brand-charcoal"><%= b[:participant].name %></div>
+                        <div class="text-xs text-gray-400">Paid <%= number_to_currency(b[:paid]) %></div>
+                      </div>
+                   </div>
+                   
+                   <div class="text-right">
+                     <% if b[:balance] > 0.01 %>
+                       <div class="text-green-500 font-bold">+<%= number_to_currency(b[:balance]) %></div>
+                       <div class="text-xs text-green-600/70">gets back</div>
+                     <% elsif b[:balance] < -0.01 %>
+                       <div class="text-red-500 font-bold"><%= number_to_currency(b[:balance]) %></div>
+                       <div class="text-xs text-red-600/70">owes</div>
+                     <% else %>
+                       <div class="text-gray-400 font-bold">Settled</div>
+                     <% end %>
+                   </div>
+                 </div>
+               <% end %>
+             </div>
+           <% else %>
+             <div class="p-8 text-center text-gray-400">
+               No participants or expenses yet.
+             </div>
+           <% end %>
+        </div>
+      </div>
+
+      <!-- Settlement -->
+      <div class="space-y-6">
+        <h3 class="text-xl font-bold text-brand-charcoal">Settlement Plan</h3>
+        <div class="bg-brand-charcoal rounded-2xl shadow-sm p-6 text-white">
+           <% if @settlements.present? %>
+             <div class="space-y-4">
+               <% @settlements.each do |s| %>
+                 <div class="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10">
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold"><%= s[:from] %></span>
+                      <span class="text-gray-400 text-sm">pays</span>
+                      <span class="font-bold"><%= s[:to] %></span>
+                    </div>
+                    <div class="font-bold text-brand-yellow">
+                      <%= number_to_currency(s[:amount]) %>
+                    </div>
+                 </div>
+               <% end %>
+             </div>
+             <div class="mt-6 pt-6 border-t border-white/10 text-center">
+               <button class="text-sm text-brand-teal hover:text-white transition-colors font-medium">Copy summary</button>
+             </div>
+           <% else %>
+             <div class="text-center py-12 text-gray-500">
+               Nothing to settle. Everyone is all square!
+             </div>
+           <% end %>
+        </div>
+      </div>
+      
+    </div>
+  <% else %>
+    <div class="text-center py-24 text-gray-500">
+      Please select a trip.
+    </div>
+  <% end %>
+</div>
+

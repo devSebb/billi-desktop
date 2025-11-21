@@ -1,0 +1,73 @@
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <div class="lg:col-span-2 space-y-6">
+     <h3 class="text-xl font-bold text-brand-charcoal">Trip Timeline</h3>
+     <div class="bg-white rounded-2xl shadow-sm p-6">
+        <% (@trip.start_date..@trip.end_date).each do |date| %>
+          <div class="flex gap-4 mb-6 last:mb-0 group">
+             <div class="flex flex-col items-center">
+                <div class="text-xs font-bold text-gray-400 uppercase"><%= date.strftime("%a") %></div>
+                <div class="text-lg font-bold text-brand-charcoal"><%= date.strftime("%d") %></div>
+                <div class="w-px h-full bg-gray-100 group-last:hidden mt-2"></div>
+             </div>
+             <div class="flex-1 pt-1">
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                   <% daily_expenses = @trip.expenses.where(spent_at: date) %>
+                   <% if daily_expenses.any? %>
+                     <div class="space-y-2">
+                       <% daily_expenses.each do |expense| %>
+                         <div class="flex justify-between items-center text-sm">
+                            <span><%= expense.description %></span>
+                            <span class="font-medium text-brand-charcoal"><%= number_to_currency(expense.amount) %></span>
+                         </div>
+                       <% end %>
+                     </div>
+                   <% else %>
+                     <p class="text-gray-400 text-sm italic">No activity planned</p>
+                   <% end %>
+                </div>
+             </div>
+          </div>
+        <% end %>
+     </div>
+  </div>
+
+  <div class="space-y-6">
+     <!-- Quick Add Expense -->
+     <div class="bg-white rounded-2xl shadow-sm p-6">
+       <h3 class="text-lg font-bold text-brand-charcoal mb-4">Quick Add Expense</h3>
+       <%= form_with(model: [@trip, Expense.new], local: true, class: "space-y-4") do |f| %>
+         <div>
+           <%= f.text_field :description, placeholder: "Description (e.g. Taxi)", class: "w-full rounded-xl border-gray-200 text-sm focus:border-brand-yellow focus:ring-brand-yellow placeholder-gray-400" %>
+         </div>
+         <div class="flex gap-4">
+           <%= f.number_field :amount, placeholder: "0.00", step: "0.01", class: "w-1/2 rounded-xl border-gray-200 text-sm focus:border-brand-yellow focus:ring-brand-yellow placeholder-gray-400" %>
+           <%= f.select :category, Expense::CATEGORIES.map { |k| [k.humanize, k] }, {}, class: "w-1/2 rounded-xl border-gray-200 text-sm focus:border-brand-yellow focus:ring-brand-yellow" %>
+         </div>
+         <%= f.date_field :spent_at, value: Date.today, class: "w-full rounded-xl border-gray-200 text-sm focus:border-brand-yellow focus:ring-brand-yellow" %>
+         
+         <%= f.submit "Log Expense", class: "w-full btn-primary py-2 text-sm cursor-pointer" %>
+       <% end %>
+     </div>
+
+     <h3 class="text-xl font-bold text-brand-charcoal">Budget Breakdown</h3>
+     <div class="bg-white rounded-2xl shadow-sm p-6">
+       <% if budget %>
+         <div class="space-y-4">
+            <%= render 'budget_row', icon: '🏨', label: 'Lodging', amount: budget.lodging_total %>
+            <%= render 'budget_row', icon: '🍽', label: 'Food', amount: budget.restaurants_total %>
+            <%= render 'budget_row', icon: '🎉', label: 'Activities', amount: budget.activities_total %>
+            <%= render 'budget_row', icon: '🍷', label: 'Drinks/Nightlife', amount: budget.drinks_total %>
+            <%= render 'budget_row', icon: '🛍', label: 'Shopping', amount: budget.shopping_total %>
+            <%= render 'budget_row', icon: '📦', label: 'Other', amount: budget.other_total %>
+            
+            <div class="pt-4 mt-4 border-t border-gray-100 flex justify-between items-center">
+              <span class="font-bold text-brand-charcoal">Total</span>
+              <span class="font-bold text-brand-charcoal text-lg"><%= number_to_currency(budget.total_trip_cost, precision: 0) %></span>
+            </div>
+         </div>
+       <% else %>
+         <p class="text-gray-500">No budget calculated yet.</p>
+       <% end %>
+     </div>
+  </div>
+</div>

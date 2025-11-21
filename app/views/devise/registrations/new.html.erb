@@ -1,0 +1,51 @@
+<div class="fixed inset-0 z-50 bg-brand-yellow flex items-center justify-center p-4 overflow-y-auto">
+  <div class="w-full max-w-md space-y-8 my-auto">
+    <!-- Logo -->
+    <div class="text-center">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-charcoal text-brand-yellow text-3xl font-bold mb-6 shadow-xl transform rotate-3">
+        B
+      </div>
+      <h2 class="text-4xl font-extrabold text-brand-charcoal tracking-tight">
+        Join Billi
+      </h2>
+      <p class="mt-2 text-brand-charcoal/80 font-medium">
+        Start planning trips that actually happen.
+      </p>
+    </div>
+
+    <!-- Form -->
+    <div class="bg-brand-yellow border-2 border-brand-charcoal shadow-[8px_8px_0px_0px_rgba(31,41,51,1)] rounded-3xl p-8 sm:p-10">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div>
+          <%= f.label :email, class: "block text-sm font-bold text-brand-charcoal mb-2" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full rounded-xl border-2 border-brand-charcoal bg-white px-4 py-3 text-brand-charcoal placeholder-gray-400 focus:border-brand-charcoal focus:ring-0 transition-all shadow-sm", placeholder: "you@example.com" %>
+        </div>
+
+        <div>
+          <%= f.label :password, class: "block text-sm font-bold text-brand-charcoal mb-2" %>
+          <%= f.password_field :password, autocomplete: "new-password", class: "block w-full rounded-xl border-2 border-brand-charcoal bg-white px-4 py-3 text-brand-charcoal placeholder-gray-400 focus:border-brand-charcoal focus:ring-0 transition-all shadow-sm", placeholder: "Min. 6 characters" %>
+        </div>
+
+        <div>
+          <%= f.label :password_confirmation, "Confirm Password", class: "block text-sm font-bold text-brand-charcoal mb-2" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-xl border-2 border-brand-charcoal bg-white px-4 py-3 text-brand-charcoal placeholder-gray-400 focus:border-brand-charcoal focus:ring-0 transition-all shadow-sm", placeholder: "Repeat password" %>
+        </div>
+
+        <%= f.submit "Create Account", class: "w-full flex justify-center py-4 px-4 border-2 border-brand-charcoal rounded-xl shadow-[4px_4px_0px_0px_rgba(31,41,51,1)] text-sm font-bold text-white bg-brand-charcoal hover:bg-gray-900 hover:shadow-[2px_2px_0px_0px_rgba(31,41,51,1)] hover:translate-y-[2px] hover:translate-x-[2px] transition-all cursor-pointer" %>
+      <% end %>
+    </div>
+    
+    <div class="text-center pb-8">
+      <p class="text-brand-charcoal font-medium">
+        Already have an account? 
+        <%= link_to "Log in", new_session_path(resource_name), class: "font-bold underline decoration-2 decoration-brand-charcoal/30 hover:decoration-brand-charcoal transition-all" %>
+      </p>
+      <div class="mt-8">
+        <%= link_to "Back to Home", root_path, class: "text-sm font-bold text-brand-charcoal/60 hover:text-brand-charcoal transition-colors" %>
+      </div>
+    </div>
+  </div>
+</div>
+
