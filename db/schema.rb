@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_20_060454) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_21_050710) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "cities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "country"
+    t.string "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_cities_on_slug"
+  end
 
   create_table "expenses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "trip_id", null: false
@@ -30,16 +39,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_20_060454) do
   end
 
   create_table "price_snapshots", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "city"
-    t.string "country"
-    t.integer "month"
-    t.string "season"
-    t.string "category"
-    t.decimal "average_amount", precision: 10, scale: 2
     t.string "currency", default: "USD"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["city", "country", "month", "category"], name: "index_price_snapshots_on_loc_month_cat"
+    t.uuid "city_id", null: false
+    t.string "source"
+    t.jsonb "data", default: {}
+    t.datetime "collected_at"
+    t.index ["city_id", "collected_at"], name: "index_price_snapshots_on_city_id_and_collected_at"
+    t.index ["city_id"], name: "index_price_snapshots_on_city_id"
+    t.index ["data"], name: "index_price_snapshots_on_data", using: :gin
+    t.index ["source"], name: "index_price_snapshots_on_source"
   end
 
   create_table "splits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -129,6 +139,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_20_060454) do
 
   add_foreign_key "expenses", "trip_participants", column: "payer_id"
   add_foreign_key "expenses", "trips"
+  add_foreign_key "price_snapshots", "cities"
   add_foreign_key "splits", "expenses"
   add_foreign_key "splits", "trip_participants"
   add_foreign_key "trip_budgets", "trips"

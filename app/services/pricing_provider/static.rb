@@ -1,29 +1,14 @@
 module PricingProvider
   class Static
     def initialize(city:, country:, start_date:, end_date:)
-      @city = city
-      @country = country
-      @start_date = start_date
-      @end_date = end_date
+      # Interface compatibility
     end
 
     def prices
-      # Identify months involved
-      months = (@start_date..@end_date).map(&:month).uniq
-      
-      # Fetch snapshots
-      snapshots = PriceSnapshot.for_location(@city, @country).where(month: months)
-      
-      return default_prices if snapshots.empty?
-
-      # Average across the months found
-      grouped = snapshots.group_by(&:category)
-      
-      result = grouped.transform_values do |records|
-        records.sum(&:average_amount) / records.size
-      end
-      
-      default_prices.merge(result)
+      # LEGACY FALLBACK:
+      # Since we moved to live API data stored in jsonb, the old PriceSnapshot rows are gone.
+      # This fallback provides safe defaults if the API data hasn't been loaded for a city yet.
+      default_prices
     end
 
     private
@@ -46,4 +31,3 @@ module PricingProvider
     end
   end
 end
-

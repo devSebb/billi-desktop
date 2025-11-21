@@ -1,7 +1,9 @@
 class PriceSnapshot < ApplicationRecord
-  validates :city, :country, :month, :category, :average_amount, presence: true
+  belongs_to :city
+
+  validates :source, presence: true
+  validates :data, presence: true
+  validates :collected_at, presence: true
   
-  # Scopes for easy lookup
-  scope :for_location, ->(city, country) { where('LOWER(city) = ? AND LOWER(country) = ?', city.downcase, country.downcase) }
-  scope :for_month, ->(month) { where(month: month) }
+  scope :recent, -> { order(collected_at: :desc) }
 end
