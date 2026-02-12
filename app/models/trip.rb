@@ -4,6 +4,9 @@ class Trip < ApplicationRecord
   has_one :trip_budget, dependent: :destroy
   has_many :expenses, dependent: :destroy
   has_many :trip_participants, dependent: :destroy
+  
+  has_many :trip_budget_items, through: :trip_budget
+  has_many :trip_preference_items, through: :trip_preference
 
   validates :name, presence: true
   validates :destination_city, presence: true
@@ -14,8 +17,9 @@ class Trip < ApplicationRecord
 
   accepts_nested_attributes_for :trip_preference
   
-  after_create :create_default_preference
-  
+after_create :create_default_preference
+  after_create :add_owner_as_participant
+
   before_save :set_image_url, if: :should_generate_image?
 
   def duration_nights
@@ -44,5 +48,15 @@ class Trip < ApplicationRecord
 
   def create_default_preference
     create_trip_preference unless trip_preference
+  end
+
+  def add_owner_as_participant
+    return if trip_participants.exists?(user_id: user_id)
+
+    trip_participants.create!(
+      user_id: user_id,
+      is_user: true,
+      name: user.name.presence || user.email
+    )
   end
 end

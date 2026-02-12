@@ -1,6 +1,6 @@
-<header class="h-20 flex items-center justify-between px-8 border-b border-gray-50 bg-white/80 backdrop-blur-sm sticky top-0 z-40">
+<header class="h-20 flex items-center justify-between px-8 border-b border-billi-ink/10 dark:border-billi-cream/10 bg-billi-surface/95 dark:bg-billi-bg-dark/95 backdrop-blur-sm sticky top-0 z-40">
   <div class="flex items-center gap-4">
-    <h1 class="text-2xl font-bold text-brand-charcoal tracking-tight">
+    <h1 class="page-title">
       <%= content_for?(:header_title) ? yield(:header_title) : "Dashboard" %>
     </h1>
   </div>
@@ -9,25 +9,25 @@
     <!-- Search -->
     <div class="relative group">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <svg class="w-5 h-5 text-gray-400 group-focus-within:text-brand-yellow transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <svg class="w-5 h-5 text-muted group-focus-within:text-brand-yellow transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
       </div>
-      <input type="text" class="block w-64 pl-10 pr-3 py-2 border border-gray-200 rounded-xl leading-5 bg-gray-50 text-brand-charcoal placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-brand-yellow focus:border-brand-yellow sm:text-sm transition-all" placeholder="Search trips...">
+      <input type="text" class="input block w-64 pl-10 py-2.5" placeholder="Search trips...">
     </div>
 
     <!-- Actions -->
-    <div class="flex items-center gap-4">
-      <button class="relative p-2 text-gray-400 hover:text-brand-charcoal transition-colors">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-        <span class="absolute top-2 right-2 w-2 h-2 bg-brand-yellow rounded-full border-2 border-white"></span>
+    <div class="flex items-center gap-2" data-controller="theme">
+      <button type="button" data-action="click->theme#toggle" class="btn-icon" aria-label="Toggle dark mode">
+        <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
       </button>
-      
-      <div class="h-8 w-px bg-gray-200"></div>
-
-      <div class="flex items-center gap-2">
-        <%= button_to destroy_user_session_path, method: :delete, class: "text-sm font-medium text-gray-500 hover:text-red-500 transition-colors" do %>
-          Log out
-        <% end %>
-      </div>
+      <button type="button" class="btn-icon relative" aria-label="Notifications">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-yellow rounded-full border-2 border-billi-surface dark:border-billi-bg-dark"></span>
+      </button>
+      <div class="h-8 w-px bg-billi-ink/15 dark:bg-billi-cream/15"></div>
+      <%= button_to destroy_user_session_path, method: :delete, class: "text-sm font-medium text-muted hover:text-red-500 dark:hover:text-red-400 transition-colors" do %>
+        Log out
+      <% end %>
     </div>
   </div>
 </header>

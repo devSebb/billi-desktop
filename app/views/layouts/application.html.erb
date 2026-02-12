@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Billi - Travel Budget Planner" %></title>
+    <title><%= content_for(:title) || "Tripstein - Travel Budget Planner" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -20,7 +20,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-gray-50 text-brand-charcoal font-sans antialiased selection:bg-brand-yellow selection:text-brand-charcoal">
+  <body data-controller="theme" class="bg-billi-bg dark:bg-billi-bg-dark text-billi-ink dark:text-billi-cream font-sans antialiased selection:bg-brand-yellow selection:text-brand-charcoal min-h-screen">
     <% if user_signed_in? %>
       <div class="flex min-h-screen">
         <%= render "shared/sidebar" %>
@@ -28,16 +28,16 @@
         <div class="flex-1 ml-64">
           <%= render "shared/topbar" %>
           
-          <main class="p-8">
+          <main class="p-8 md:p-8 lg:p-10 max-w-[1600px]">
             <% if notice.present? %>
-              <div class="mb-6 p-4 bg-green-50 border border-green-100 text-green-700 rounded-lg shadow-sm text-sm flex items-center gap-2 animate-fade-in">
-                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 text-green-700 dark:text-green-300 rounded-xl text-sm flex items-center gap-2">
+                 <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                  <%= notice %>
               </div>
             <% end %>
             <% if alert.present? %>
-              <div class="mb-6 p-4 bg-red-50 border border-red-100 text-red-700 rounded-lg shadow-sm text-sm flex items-center gap-2 animate-fade-in">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-red-700 dark:text-red-300 rounded-xl text-sm flex items-center gap-2">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <%= alert %>
               </div>
             <% end %>

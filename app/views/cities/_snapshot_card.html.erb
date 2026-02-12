@@ -1,0 +1,58 @@
+<%# locals: { snapshot: } %>
+<% city = snapshot.city %>
+<% currency = snapshot.currency.presence || "USD" %>
+<% cost_rows = CityCostPresenter.rows_for_card(snapshot) %>
+<% data_badge = snapshot.source == "traveltables" ? "Real data" : "Estimated" %>
+
+<div class="card hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 dark:border-gray-700 p-0">
+  <% city_img = city_image_url(city) %>
+  <div class="h-32 relative overflow-hidden group-hover:opacity-95 transition-opacity bg-cover bg-center <%= 'bg-gray-100 dark:bg-gray-800' unless city_img.present? %>" style="<%= "background-image: url('#{city_img}');" if city_img.present? %>">
+    <% unless city_img.present? %>
+      <div class="absolute inset-0 bg-gradient-to-br from-brand-charcoal to-gray-800"></div>
+      <div class="absolute inset-0 flex items-center justify-center opacity-10">
+        <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+      </div>
+    <% end %>
+    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+      <h3 class="text-lg font-bold text-white leading-tight truncate"><%= city.name %></h3>
+      <p class="text-white/80 text-xs font-medium truncate"><%= city.country %></p>
+    </div>
+  </div>
+
+  <div class="p-4 flex-1 flex flex-col gap-3">
+    <% if cost_rows.any? %>
+      <div class="space-y-2.5">
+        <% cost_rows.each do |row| %>
+          <div class="flex items-center justify-between text-sm group/item">
+            <div class="flex items-center gap-2 text-muted group-hover/item:text-primary transition-colors">
+              <span><%= row[:label] %></span>
+            </div>
+            <span class="font-medium text-primary">
+              <%= number_to_currency(row[:amount], unit: currency == "USD" ? "$" : "#{currency} ", precision: 0) %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+      <div class="mt-auto pt-2">
+        <span class="text-xs font-medium text-brand-yellow dark:text-yellow-400">View breakdown →</span>
+      </div>
+    <% else %>
+      <div class="flex-1 flex flex-col items-center justify-center text-muted text-sm italic py-4">
+        <span>No cost data yet</span>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="px-4 py-3 border-t border-billi-ink/10 dark:border-billi-cream/10 bg-billi-bg/80 dark:bg-billi-surface-dark/80 flex items-center justify-between text-[10px] text-muted uppercase tracking-wider font-medium">
+    <span>
+      <%= currency %>
+      <% if snapshot.source == "traveltables" %>
+        <span class="badge badge--teal normal-case text-xs font-semibold ml-1"><%= data_badge %></span>
+      <% else %>
+        <span class="badge badge--accent normal-case text-xs font-semibold ml-1"><%= data_badge %></span>
+      <% end %>
+    </span>
+    <span>Updated <%= snapshot.collected_at&.strftime("%b %d") %></span>
+  </div>
+</div>

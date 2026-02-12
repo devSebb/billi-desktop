@@ -1,82 +1,156 @@
-<div class="bg-white rounded-2xl shadow-sm p-8">
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-xl font-bold text-brand-charcoal">Budget Preferences</h2>
-    <%= link_to "Edit Preferences", wizard_step_2_trip_path(trip), class: "text-brand-yellow font-medium hover:text-yellow-600" %>
+<div class="space-y-8">
+  <div id="budget_breakdown">
+    <%= render "trips/budget_breakdown", budget: budget, trip: trip %>
   </div>
+
+  <div class="card p-8">
+    <h2 class="section-title mb-6 flex items-center gap-2">
+      <span class="w-8 h-8 rounded-lg bg-brand-yellow/20 dark:bg-brand-yellow/30 flex items-center justify-center">
+        <svg class="w-4 h-4 text-primary dark:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+      </span>
+      Adjust Preferences
+    </h2>
+    <%= form_with model: preference, url: trip_preference_path(trip), method: :patch, data: { turbo_stream: true }, class: "section space-y-6" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :lodging_style, "Lodging style", class: "label" %>
+          <%= f.select :lodging_style, TripPreference.lodging_styles.keys.map { |k| [k.humanize, k] }, {}, class: "input" %>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <%= f.label :hotel_nights, "Hotel nights", class: "label" %>
+            <%= f.number_field :hotel_nights, class: "input" %>
+          </div>
+          <div>
+            <%= f.label :airbnb_nights, "Airbnb nights", class: "label" %>
+            <%= f.number_field :airbnb_nights, class: "input" %>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <%= f.label :fancy_restaurant_meals, "Fancy meals", class: "label" %>
+          <%= f.number_field :fancy_restaurant_meals, class: "input" %>
+        </div>
+        <div>
+          <%= f.label :casual_restaurant_meals, "Casual meals", class: "label" %>
+          <%= f.number_field :casual_restaurant_meals, class: "input" %>
+        </div>
+        <div>
+          <%= f.label :street_food_meals, "Street food meals", class: "label" %>
+          <%= f.number_field :street_food_meals, class: "input" %>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :activities_count, "Paid activities", class: "label" %>
+          <%= f.number_field :activities_count, class: "input" %>
+        </div>
+        <div>
+          <%= f.label :nightlife_nights, "Nights out", class: "label" %>
+          <%= f.number_field :nightlife_nights, class: "input" %>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :shopping_budget_level, "Shopping level", class: "label" %>
+          <%= f.select :shopping_budget_level, TripPreference.shopping_budget_levels.keys.map { |k| [k.humanize, k] }, {}, class: "input" %>
+        </div>
+        <div>
+          <%= f.label :overall_comfort_level, "Comfort level", class: "label" %>
+          <%= f.select :overall_comfort_level, TripPreference.overall_comfort_levels.keys.map { |k| [k.humanize, k] }, {}, class: "input" %>
+        </div>
+      </div>
+      <div>
+        <%= f.label :notes, "Notes", class: "label" %>
+        <%= f.text_area :notes, rows: 2, class: "input" %>
+      </div>
+      <%= f.submit "Update budget", class: "btn-primary cursor-pointer" %>
+    <% end %>
+  </div>
+
+  <div class="card p-8">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="section-title">Budget Preferences</h2>
+      <%= link_to wizard_step_2_trip_path(trip), class: "text-sm font-medium text-brand-yellow hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors" do %>
+        Edit Preferences (full page)
+        <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+      <% end %>
+    </div>
 
   <div class="space-y-4">
     <!-- Lodging -->
-    <div class="p-6 border border-gray-100 rounded-xl bg-gray-50/50">
+    <div class="p-6 border border-billi-ink/10 dark:border-billi-cream/10 rounded-xl bg-billi-bg/80 dark:bg-billi-surface-dark/80">
        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-3 font-medium text-brand-charcoal text-lg">
+          <div class="flex items-center gap-3 font-medium text-primary text-lg">
             <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm">🏨</span> 
             Lodging
           </div>
-          <span class="font-bold text-xl text-brand-charcoal"><%= number_to_currency(budget&.lodging_total, precision: 0) %></span>
+          <span class="font-bold text-xl text-primary"><%= format_in_display_currency(budget&.lodging_total, trip.currency) %></span>
        </div>
-       <div class="pl-11 text-gray-500">
-         <span class="font-medium text-brand-charcoal"><%= preference.lodging_style.titleize %></span> style. 
-         Includes <strong class="text-brand-charcoal"><%= preference.hotel_nights %></strong> hotel nights and <strong class="text-brand-charcoal"><%= preference.airbnb_nights %></strong> Airbnb nights.
+       <div class="pl-11 text-muted">
+         <span class="font-medium text-primary"><%= preference.lodging_style.titleize %></span> style. 
+         Includes <strong class="text-primary"><%= preference.hotel_nights %></strong> hotel nights and <strong class="text-primary"><%= preference.airbnb_nights %></strong> Airbnb nights.
        </div>
     </div>
 
     <!-- Food -->
-    <div class="p-6 border border-gray-100 rounded-xl bg-gray-50/50">
+    <div class="p-6 border border-billi-ink/10 dark:border-billi-cream/10 rounded-xl bg-billi-bg/80 dark:bg-billi-surface-dark/80">
        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-3 font-medium text-brand-charcoal text-lg">
+          <div class="flex items-center gap-3 font-medium text-primary text-lg">
             <span class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">🍽</span> 
             Food & Dining
           </div>
-          <span class="font-bold text-xl text-brand-charcoal"><%= number_to_currency(budget&.restaurants_total, precision: 0) %></span>
+          <span class="font-bold text-xl text-primary"><%= format_in_display_currency(budget&.restaurants_total, trip.currency) %></span>
        </div>
-       <div class="pl-11 text-gray-500">
-         <strong class="text-brand-charcoal"><%= preference.fancy_restaurant_meals %></strong> fancy meals, 
-         <strong class="text-brand-charcoal"><%= preference.casual_restaurant_meals %></strong> casual meals, 
-         <strong class="text-brand-charcoal"><%= preference.street_food_meals %></strong> street food meals.
+       <div class="pl-11 text-muted">
+         <strong class="text-primary"><%= preference.fancy_restaurant_meals %></strong> fancy meals, 
+         <strong class="text-primary"><%= preference.casual_restaurant_meals %></strong> casual meals, 
+         <strong class="text-primary"><%= preference.street_food_meals %></strong> street food meals.
        </div>
     </div>
 
     <!-- Activities -->
-    <div class="p-6 border border-gray-100 rounded-xl bg-gray-50/50">
+    <div class="p-6 border border-billi-ink/10 dark:border-billi-cream/10 rounded-xl bg-billi-bg/80 dark:bg-billi-surface-dark/80">
        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-3 font-medium text-brand-charcoal text-lg">
+          <div class="flex items-center gap-3 font-medium text-primary text-lg">
             <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-sm">🎉</span> 
             Activities
           </div>
-          <span class="font-bold text-xl text-brand-charcoal"><%= number_to_currency(budget&.activities_total, precision: 0) %></span>
+          <span class="font-bold text-xl text-primary"><%= format_in_display_currency(budget&.activities_total, trip.currency) %></span>
        </div>
-       <div class="pl-11 text-gray-500">
-         <strong class="text-brand-charcoal"><%= preference.activities_count %></strong> paid activities planned.
+       <div class="pl-11 text-muted">
+         <strong class="text-primary"><%= preference.activities_count %></strong> paid activities planned.
        </div>
     </div>
 
     <!-- Nightlife -->
-    <div class="p-6 border border-gray-100 rounded-xl bg-gray-50/50">
+    <div class="p-6 border border-billi-ink/10 dark:border-billi-cream/10 rounded-xl bg-billi-bg/80 dark:bg-billi-surface-dark/80">
        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-3 font-medium text-brand-charcoal text-lg">
+          <div class="flex items-center gap-3 font-medium text-primary text-lg">
             <span class="w-8 h-8 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center text-sm">🍷</span> 
             Nightlife
           </div>
-          <span class="font-bold text-xl text-brand-charcoal"><%= number_to_currency(budget&.drinks_total, precision: 0) %></span>
+          <span class="font-bold text-xl text-primary"><%= format_in_display_currency(budget&.drinks_total, trip.currency) %></span>
        </div>
-       <div class="pl-11 text-gray-500">
-         <strong class="text-brand-charcoal"><%= preference.nightlife_nights %></strong> nights out.
+       <div class="pl-11 text-muted">
+         <strong class="text-primary"><%= preference.nightlife_nights %></strong> nights out.
        </div>
     </div>
     
     <!-- Shopping -->
-    <div class="p-6 border border-gray-100 rounded-xl bg-gray-50/50">
+    <div class="p-6 border border-billi-ink/10 dark:border-billi-cream/10 rounded-xl bg-billi-bg/80 dark:bg-billi-surface-dark/80">
        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-3 font-medium text-brand-charcoal text-lg">
+          <div class="flex items-center gap-3 font-medium text-primary text-lg">
             <span class="w-8 h-8 rounded-lg bg-yellow-100 text-yellow-600 flex items-center justify-center text-sm">🛍</span> 
             Shopping
           </div>
-          <span class="font-bold text-xl text-brand-charcoal"><%= number_to_currency(budget&.shopping_total, precision: 0) %></span>
+          <span class="font-bold text-xl text-primary"><%= format_in_display_currency(budget&.shopping_total, trip.currency) %></span>
        </div>
-       <div class="pl-11 text-gray-500">
-         Budget level: <strong class="text-brand-charcoal capitalize"><%= preference.shopping_budget_level %></strong>.
+       <div class="pl-11 text-muted">
+         Budget level: <strong class="text-primary capitalize"><%= preference.shopping_budget_level %></strong>.
        </div>
     </div>
   </div>
+  </div>
 </div>
-

@@ -1,0 +1,60 @@
+<% content_for :header_title, @city.name %>
+
+<div class="max-w-4xl mx-auto">
+  <% if @snapshot %>
+    <% city_img = city_image_url(@city) %>
+    <div class="rounded-2xl overflow-hidden mb-8 border border-billi-ink/10 dark:border-billi-cream/10 shadow-sm">
+      <div class="h-48 md:h-56 relative bg-cover bg-center <%= 'bg-billi-bg-muted dark:bg-gray-800' unless city_img.present? %>" style="<%= "background-image: url('#{city_img}');" if city_img.present? %>">
+        <% unless city_img.present? %>
+          <div class="absolute inset-0 bg-gradient-to-br from-brand-charcoal to-gray-800"></div>
+        <% end %>
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+          <h1 class="page-title text-white mb-1"><%= @city.name %></h1>
+          <p class="text-white/90 text-sm"><%= @city.country %></p>
+          <div class="flex flex-wrap items-center gap-2 mt-3">
+            <% if @data_badge == "Real data" %>
+              <span class="badge badge--teal"><%= @data_badge %></span>
+            <% else %>
+              <span class="badge badge--accent"><%= @data_badge %></span>
+            <% end %>
+            <span class="text-white/80 text-xs">Updated <%= @updated_at&.strftime("%b %d, %Y") %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-6">
+      <p class="caption mb-4">Currency</p>
+      <p class="text-primary font-medium"><%= @currency_label %></p>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title mb-6">Average costs</h2>
+      <% present_rows = @cost_rows.select { |r| r[:present?] } %>
+      <% if present_rows.any? %>
+        <div class="space-y-4">
+          <% present_rows.each do |row| %>
+            <div class="flex items-center justify-between py-3 border-b border-billi-ink/10 dark:border-billi-cream/10 last:border-0 last:pb-0">
+              <span class="text-primary"><%= row[:label] %></span>
+              <span class="font-medium text-primary">
+                <%= format_in_display_currency(row[:amount], row[:currency]) %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted text-sm">No cost breakdown available for this snapshot.</p>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="card p-8 text-center">
+      <div class="w-16 h-16 bg-billi-bg-muted dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+        🏙
+      </div>
+      <h2 class="card-title mb-2">No cost data yet for this city</h2>
+      <p class="text-muted mb-6 text-sm max-w-sm mx-auto">We don't have cost averages for <%= @city.name %> yet. Plan a trip to get started.</p>
+      <%= link_to "Plan a trip", new_trip_path, class: "btn-primary" %>
+    </div>
+  <% end %>
+</div>

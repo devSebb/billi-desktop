@@ -1,5 +1,6 @@
+# Legacy; BudgetGenerator uses PricingProvider (Snapshot/Static). Kept for reference or fallback.
 class PriceEstimator
-  # This is a simplified mock of a pricing engine. 
+  # This is a simplified mock of a pricing engine.
   # In a real app, this would query a database of average prices per city/season.
   
   BASE_RATES = {

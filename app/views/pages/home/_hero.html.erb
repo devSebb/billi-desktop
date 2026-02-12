@@ -1,0 +1,156 @@
+<%# Cinematic Hero — full-bleed, warm cream base, layered depth %>
+<section class="relative min-h-screen flex items-center pt-24 pb-16 lg:pb-24 overflow-hidden landing-grain"
+         data-controller="hero-parallax"
+         style="background: radial-gradient(ellipse 80% 60% at 20% 30%, rgba(245,166,35,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 80% 70%, rgba(14,165,165,0.05) 0%, transparent 60%),
+                var(--color-landing-cream);">
+
+  <%# Floating parallax blobs %>
+  <div data-hero-parallax-target="blob" data-parallax-speed="0.08"
+       class="blob-drift-1 absolute -top-20 -left-20 w-[400px] h-[400px] rounded-full pointer-events-none"
+       style="background: radial-gradient(circle, rgba(245,166,35,0.12) 0%, transparent 70%);"></div>
+  <div data-hero-parallax-target="blob" data-parallax-speed="-0.05"
+       class="blob-drift-2 absolute -bottom-32 -right-20 w-[500px] h-[500px] rounded-full pointer-events-none"
+       style="background: radial-gradient(circle, rgba(14,165,165,0.08) 0%, transparent 70%);"></div>
+  <div data-hero-parallax-target="blob" data-parallax-speed="0.12"
+       class="blob-drift-1 absolute top-1/3 right-1/4 w-[200px] h-[200px] rounded-full pointer-events-none opacity-60"
+       style="background: radial-gradient(circle, rgba(245,166,35,0.1) 0%, transparent 70%);"></div>
+
+  <%# Main content %>
+  <div class="relative z-10 max-w-screen-xl mx-auto px-6 w-full">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+
+      <%# Text column %>
+      <div class="lg:col-span-5 space-y-8">
+        <%# Headline with display font %>
+        <h1 class="space-y-2">
+          <span class="hero-anim-headline block text-4xl md:text-5xl xl:text-6xl font-bold tracking-tight-landing"
+                style="color: var(--color-landing-charcoal);">
+            Travel with
+          </span>
+          <span class="hero-anim-headline block relative inline-block" style="animation-delay: 0.15s;">
+            <span class="landing-headline text-5xl md:text-6xl xl:text-[5rem]"
+                  style="color: var(--color-landing-charcoal);">
+              confidence.
+            </span>
+            <%# SVG brush highlight that draws on load %>
+            <svg class="absolute -bottom-1 left-0 w-full h-[0.35em] -z-1" viewBox="0 0 300 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path class="landing-brush-path"
+                    d="M3 14C30 4 60 2 90 10C120 18 150 6 180 12C210 18 240 5 270 10C280 12 295 14 297 13"
+                    stroke="var(--color-landing-saffron)" stroke-width="6" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+            </svg>
+          </span>
+        </h1>
+
+        <%# Subtitle %>
+        <p class="hero-anim-subtitle text-lg md:text-xl leading-relaxed max-w-lg"
+           style="color: var(--color-landing-ink-muted);">
+          Tripstein uses real cost-of-living data to build your travel budget in minutes. No spreadsheets. No guesswork.
+        </p>
+
+        <%# CTAs %>
+        <div class="hero-anim-cta flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <%= link_to new_user_registration_path, class: "landing-cta-primary group" do %>
+            <span>Start planning — it's free</span>
+            <svg class="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+            </svg>
+          <% end %>
+          <a href="#how-it-works" class="landing-cta-secondary group">
+            <span>See how it works</span>
+            <svg class="w-4 h-4 scroll-bounce" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <%# Visual column — Browser frame with product mockup %>
+      <div class="lg:col-span-7 relative hidden lg:block">
+        <div class="hero-anim-visual float-slow relative" style="transform-style: preserve-3d;">
+          <div class="landing-browser-frame" style="transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);">
+            <%# Browser chrome %>
+            <div class="landing-browser-chrome">
+              <div class="landing-browser-dot" style="background: #FF5F57;"></div>
+              <div class="landing-browser-dot" style="background: #FFBD2E;"></div>
+              <div class="landing-browser-dot" style="background: #28CA41;"></div>
+              <div class="flex-1 ml-4 h-7 rounded-lg flex items-center px-3 text-xs font-medium"
+                   style="background: rgba(26,31,37,0.04); color: var(--color-landing-ink-muted);">
+                tripstein.app/trips/lisbon
+              </div>
+            </div>
+
+            <%# Mock trip dashboard %>
+            <div class="p-6 space-y-5" style="background: var(--color-landing-cream);">
+              <%# Header %>
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-bold text-lg" style="color: var(--color-landing-charcoal);">Lisbon, Portugal</h3>
+                  <p class="text-xs mt-0.5" style="color: var(--color-landing-ink-muted);">Mar 15 – Mar 22 · 7 nights · 2 travelers</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
+                        style="background: rgba(14,165,165,0.1); color: var(--color-landing-teal);">
+                    Real data
+                  </span>
+                </div>
+              </div>
+
+              <%# Budget total card %>
+              <div class="rounded-xl p-5 relative overflow-hidden"
+                   style="background: linear-gradient(135deg, var(--color-landing-saffron), #F7C948); color: var(--color-landing-charcoal);">
+                <div class="relative z-10">
+                  <div class="text-xs font-medium opacity-70 uppercase tracking-wider">Estimated budget</div>
+                  <div class="text-3xl font-black mt-1 font-mono tracking-tight">$2,450</div>
+                  <div class="text-sm font-medium opacity-70 mt-0.5">$1,225 per person</div>
+                </div>
+                <div class="absolute -right-4 -bottom-4 w-24 h-24 rounded-full opacity-20"
+                     style="background: var(--color-landing-charcoal);"></div>
+              </div>
+
+              <%# Category breakdown %>
+              <div class="space-y-3">
+                <% [
+                  { name: "Lodging",    amount: "$840",  pct: 65, color: "#6366F1", icon: "🏨" },
+                  { name: "Food",       amount: "$560",  pct: 80, color: "#F59E0B", icon: "🍽️" },
+                  { name: "Activities", amount: "$350",  pct: 45, color: "#0EA5A5", icon: "🎭" },
+                  { name: "Nightlife",  amount: "$280",  pct: 55, color: "#EC4899", icon: "🍷" },
+                  { name: "Shopping",   amount: "$200",  pct: 30, color: "#8B5CF6", icon: "🛍️" },
+                  { name: "Other",      amount: "$220",  pct: 35, color: "#6B7280", icon: "📌" },
+                ].each do |cat| %>
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm"
+                         style="background: <%= cat[:color] %>15;">
+                      <%= cat[:icon] %>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-medium" style="color: var(--color-landing-charcoal);"><%= cat[:name] %></span>
+                        <span class="text-xs font-bold font-mono" style="color: var(--color-landing-charcoal);"><%= cat[:amount] %></span>
+                      </div>
+                      <div class="h-1.5 rounded-full w-full" style="background: rgba(26,31,37,0.06);">
+                        <div class="h-1.5 rounded-full" style="width: <%= cat[:pct] %>%; background: <%= cat[:color] %>;"></div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# Scroll indicator %>
+  <div class="hero-anim-scroll-hint absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+    <span class="text-xs font-medium uppercase tracking-wider" style="color: var(--color-landing-ink-muted);">Scroll</span>
+    <svg class="w-5 h-5 scroll-bounce" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--color-landing-ink-muted);">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/>
+    </svg>
+  </div>
+
+  <%# IntersectionObserver sentinel (placed at bottom of hero for navbar glass trigger) %>
+  <div id="hero-sentinel" class="absolute bottom-0 left-0 w-full h-1"></div>
+</section>

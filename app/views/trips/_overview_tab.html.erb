@@ -1,7 +1,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
   <div class="lg:col-span-2 space-y-6">
-     <h3 class="text-xl font-bold text-brand-charcoal">Trip Timeline</h3>
-     <div class="bg-white rounded-2xl shadow-sm p-6">
+     <h3 class="section-title">Trip Timeline</h3>
+     <div class="card">
         <% (@trip.start_date..@trip.end_date).each do |date| %>
           <div class="flex gap-4 mb-6 last:mb-0 group">
              <div class="flex flex-col items-center">
@@ -10,19 +10,19 @@
                 <div class="w-px h-full bg-gray-100 group-last:hidden mt-2"></div>
              </div>
              <div class="flex-1 pt-1">
-                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                <div class="bg-billi-bg dark:bg-billi-surface-dark rounded-xl p-4 border border-billi-ink/10 dark:border-billi-cream/10">
                    <% daily_expenses = @trip.expenses.where(spent_at: date) %>
                    <% if daily_expenses.any? %>
                      <div class="space-y-2">
                        <% daily_expenses.each do |expense| %>
                          <div class="flex justify-between items-center text-sm">
                             <span><%= expense.description %></span>
-                            <span class="font-medium text-brand-charcoal"><%= number_to_currency(expense.amount) %></span>
+                            <span class="font-medium text-brand-charcoal"><%= format_in_display_currency(expense.amount, @trip.currency) %></span>
                          </div>
                        <% end %>
                      </div>
                    <% else %>
-                     <p class="text-gray-400 text-sm italic">No activity planned</p>
+                     <p class="text-muted text-sm italic">No activity planned</p>
                    <% end %>
                 </div>
              </div>
@@ -32,41 +32,75 @@
   </div>
 
   <div class="space-y-6">
-     <!-- Quick Add Expense -->
-     <div class="bg-white rounded-2xl shadow-sm p-6">
-       <h3 class="text-lg font-bold text-brand-charcoal mb-4">Quick Add Expense</h3>
-       <%= form_with(model: [@trip, Expense.new], local: true, class: "space-y-4") do |f| %>
+     <div class="card border-l-4 border-brand-teal">
+       <h3 class="card-title mb-4">Actual costs</h3>
+       <% total_spent = @trip.expenses.sum(:amount) %>
+       <% planned = @trip.trip_budget&.total_trip_cost || 0 %>
+       <% remaining = planned - total_spent %>
+       <div class="grid grid-cols-3 gap-4 text-center">
          <div>
-           <%= f.text_field :description, placeholder: "Description (e.g. Taxi)", class: "w-full rounded-xl border-gray-200 text-sm focus:border-brand-yellow focus:ring-brand-yellow placeholder-gray-400" %>
+           <p class="caption">Spent</p>
+           <p class="text-xl font-bold text-primary"><%= format_in_display_currency(total_spent, @trip.currency) %></p>
          </div>
-         <div class="flex gap-4">
-           <%= f.number_field :amount, placeholder: "0.00", step: "0.01", class: "w-1/2 rounded-xl border-gray-200 text-sm focus:border-brand-yellow focus:ring-brand-yellow placeholder-gray-400" %>
-           <%= f.select :category, Expense::CATEGORIES.map { |k| [k.humanize, k] }, {}, class: "w-1/2 rounded-xl border-gray-200 text-sm focus:border-brand-yellow focus:ring-brand-yellow" %>
+         <div>
+           <p class="caption">Planned</p>
+           <p class="text-xl font-bold text-primary"><%= format_in_display_currency(planned, @trip.currency) %></p>
          </div>
-         <%= f.date_field :spent_at, value: Date.today, class: "w-full rounded-xl border-gray-200 text-sm focus:border-brand-yellow focus:ring-brand-yellow" %>
-         
-         <%= f.submit "Log Expense", class: "w-full btn-primary py-2 text-sm cursor-pointer" %>
+         <div>
+           <p class="text-xs font-medium text-gray-500 uppercase">Remaining</p>
+           <p class="text-xl font-bold <%= remaining >= 0 ? 'text-green-600' : 'text-red-600' %>"><%= format_in_display_currency(remaining, @trip.currency) %></p>
+         </div>
+       </div>
+       <% recent = @trip.expenses.order(spent_at: :desc).limit(5) %>
+       <% if recent.any? %>
+         <p class="caption mt-4 mb-2">Recent expenses</p>
+         <ul class="space-y-1 text-sm">
+           <% recent.each do |e| %>
+             <li class="flex justify-between"><span><%= e.description.presence || e.category %></span><span class="font-medium"><%= format_in_display_currency(e.amount, @trip.currency) %></span></li>
+           <% end %>
+         </ul>
        <% end %>
      </div>
 
-     <h3 class="text-xl font-bold text-brand-charcoal">Budget Breakdown</h3>
-     <div class="bg-white rounded-2xl shadow-sm p-6">
+     <div class="card">
+       <h3 class="card-title mb-4">Quick Add Expense</h3>
+       <%= form_with(model: [@trip, Expense.new], local: true, class: "space-y-4") do |f| %>
+         <div>
+           <%= f.text_field :description, placeholder: "Description (e.g. Taxi)", class: "input" %>
+         </div>
+         <div class="flex gap-4">
+           <%= f.number_field :amount, placeholder: "0.00", step: "0.01", class: "input flex-1" %>
+           <%= f.select :category, Expense::CATEGORIES.map { |k| [k.humanize, k] }, {}, class: "input flex-1" %>
+         </div>
+         <% if @trip.trip_participants.any? %>
+           <div>
+             <%= f.label :payer_participant_id, "Who paid? (optional)", class: "label" %>
+             <%= f.select :payer_participant_id, @trip.trip_participants.map { |p| [p.name.presence || p.user&.email || "Participant ##{p.id}", p.id] }, { include_blank: "— Optional —" }, class: "input" %>
+           </div>
+         <% end %>
+         <%= f.date_field :spent_at, value: Date.today, class: "input" %>
+         <%= f.submit "Log Expense", class: "w-full btn-primary cursor-pointer" %>
+       <% end %>
+     </div>
+
+     <h3 class="section-title">Budget Breakdown</h3>
+     <div class="card">
        <% if budget %>
          <div class="space-y-4">
-            <%= render 'budget_row', icon: '🏨', label: 'Lodging', amount: budget.lodging_total %>
-            <%= render 'budget_row', icon: '🍽', label: 'Food', amount: budget.restaurants_total %>
-            <%= render 'budget_row', icon: '🎉', label: 'Activities', amount: budget.activities_total %>
-            <%= render 'budget_row', icon: '🍷', label: 'Drinks/Nightlife', amount: budget.drinks_total %>
-            <%= render 'budget_row', icon: '🛍', label: 'Shopping', amount: budget.shopping_total %>
-            <%= render 'budget_row', icon: '📦', label: 'Other', amount: budget.other_total %>
+            <%= render 'budget_row', icon: '🏨', label: 'Lodging', amount: budget.lodging_total, trip: @trip %>
+            <%= render 'budget_row', icon: '🍽', label: 'Food', amount: budget.restaurants_total, trip: @trip %>
+            <%= render 'budget_row', icon: '🎉', label: 'Activities', amount: budget.activities_total, trip: @trip %>
+            <%= render 'budget_row', icon: '🍷', label: 'Drinks/Nightlife', amount: budget.drinks_total, trip: @trip %>
+            <%= render 'budget_row', icon: '🛍', label: 'Shopping', amount: budget.shopping_total, trip: @trip %>
+            <%= render 'budget_row', icon: '📦', label: 'Other', amount: budget.other_total, trip: @trip %>
             
-            <div class="pt-4 mt-4 border-t border-gray-100 flex justify-between items-center">
-              <span class="font-bold text-brand-charcoal">Total</span>
-              <span class="font-bold text-brand-charcoal text-lg"><%= number_to_currency(budget.total_trip_cost, precision: 0) %></span>
+            <div class="pt-4 mt-4 border-t border-billi-ink/10 dark:border-billi-cream/10 flex justify-between items-center">
+              <span class="font-bold text-primary">Total</span>
+              <span class="font-bold text-primary text-lg"><%= format_in_display_currency(budget.total_trip_cost, @trip.currency) %></span>
             </div>
          </div>
        <% else %>
-         <p class="text-gray-500">No budget calculated yet.</p>
+         <p class="text-muted">No budget calculated yet.</p>
        <% end %>
      </div>
   </div>

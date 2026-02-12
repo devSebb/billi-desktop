@@ -1,22 +1,45 @@
 <% content_for :header_title, "My Trips" %>
 
 <div class="max-w-7xl mx-auto">
+  <div class="mb-10 section-gap">
+    <div class="flex items-end justify-between mb-6 px-1">
+      <div>
+        <h2 class="section-title">Featured cities</h2>
+        <p class="text-sm text-muted mt-1">Based on latest averages in Tripstein</p>
+      </div>
+    </div>
+    <% if @featured_city_snapshots.any? %>
+      <div class="flex overflow-x-auto pb-6 -mx-4 px-4 gap-4 snap-x">
+        <% @featured_city_snapshots.each do |snapshot| %>
+          <%= link_to city_path(snapshot.city), class: "flex-none w-[260px] snap-start no-underline", aria: { label: "View #{snapshot.city.name} profile" } do %>
+            <%= render "cities/snapshot_card", snapshot: snapshot %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="card p-8 text-center">
+        <div class="w-12 h-12 bg-billi-bg-muted dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
+          🏙
+        </div>
+        <h3 class="card-title mb-2">No city averages yet</h3>
+        <p class="text-muted mb-6 text-sm max-w-sm mx-auto">We're gathering cost data from cities around the world.</p>
+        <%= link_to "Plan a new trip", new_trip_path, class: "text-brand-yellow font-medium text-sm hover:underline dark:hover:text-yellow-400" %>
+      </div>
+    <% end %>
+  </div>
   
   <% if @trips.any? %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      
-      <!-- New Trip Card -->
-      <%= link_to new_trip_path, class: "group flex flex-col items-center justify-center h-[320px] rounded-2xl border-2 border-dashed border-gray-300 hover:border-brand-yellow hover:bg-brand-yellow/5 transition-all duration-300" do %>
-        <div class="w-16 h-16 rounded-full bg-gray-100 group-hover:bg-brand-yellow group-hover:text-brand-charcoal flex items-center justify-center text-gray-400 transition-all duration-300 mb-4">
+      <%= link_to new_trip_path, class: "group flex flex-col items-center justify-center h-[320px] rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-brand-yellow hover:bg-brand-yellow/5 dark:hover:bg-brand-yellow/10 transition-all duration-300" do %>
+        <div class="w-16 h-16 rounded-full bg-billi-bg-muted dark:bg-gray-700 group-hover:bg-brand-yellow group-hover:text-brand-charcoal flex items-center justify-center text-muted transition-all duration-300 mb-4">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
         </div>
-        <span class="text-lg font-medium text-gray-500 group-hover:text-brand-charcoal">Plan a new trip</span>
+        <span class="text-lg font-medium text-muted group-hover:text-primary">Plan a new trip</span>
       <% end %>
 
       <% @trips.each do |trip| %>
-        <%= link_to trip_path(trip), class: "group block bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden flex flex-col h-[320px]" do %>
-          <!-- Card Image/Banner -->
-          <div class="h-40 relative p-6 flex flex-col justify-between bg-cover bg-center <%= 'bg-gradient-to-br from-gray-800 to-gray-900' unless trip.image_url.present? %>" 
+        <%= link_to trip_path(trip), class: "group block card hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden flex flex-col h-[320px] p-0" do %>
+          <div class="h-40 relative p-6 flex flex-col justify-between bg-cover bg-center <%= 'bg-gradient-to-br from-brand-charcoal to-gray-800 dark:from-gray-800 dark:to-gray-900' unless trip.image_url.present? %>" 
                style="<%= "background-image: url('#{trip.image_url}');" if trip.image_url.present? %>">
             <div class="absolute inset-0 bg-black/30"></div>
             <div class="relative z-10 flex justify-between items-start">
@@ -30,32 +53,31 @@
             </div>
           </div>
           
-          <!-- Card Body -->
-          <div class="p-6 flex-1 flex flex-col justify-between">
+          <div class="p-6 flex-1 flex flex-col justify-between bg-billi-surface dark:bg-billi-surface-dark">
              <div>
-               <h4 class="font-medium text-brand-charcoal mb-1 truncate"><%= trip.name %></h4>
-               <p class="text-sm text-gray-500 flex items-center gap-2">
+               <h4 class="font-medium text-primary mb-1 truncate"><%= trip.name %></h4>
+               <p class="text-sm text-muted flex items-center gap-2">
                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                  <%= trip.start_date.strftime("%b %d") %> - <%= trip.end_date.strftime("%b %d, %Y") %>
                </p>
              </div>
              
-             <div class="pt-4 border-t border-gray-50 flex items-center justify-between">
+             <div class="pt-4 border-t border-billi-ink/10 dark:border-billi-cream/10 flex items-center justify-between">
                <div class="flex -space-x-2 overflow-hidden">
                   <% # Placeholder avatars %>
-                  <div class="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-brand-charcoal text-white flex items-center justify-center text-xs"><%= current_user.email[0].upcase %></div>
+                  <div class="inline-block h-8 w-8 rounded-full ring-2 ring-billi-surface dark:ring-billi-surface-dark bg-brand-charcoal text-billi-cream flex items-center justify-center text-xs"><%= current_user.email[0].upcase %></div>
                   <% if trip.travelers_count > 1 %>
                     <% (trip.travelers_count - 1).times do %>
-                        <div class="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-gray-200 flex items-center justify-center text-xs text-gray-400">?</div>
+                        <div class="inline-block h-8 w-8 rounded-full ring-2 ring-billi-surface dark:ring-billi-surface-dark bg-billi-bg-muted dark:bg-gray-600 flex items-center justify-center text-xs text-muted">?</div>
                     <% end %>
                   <% end %>
                </div>
                
                <div class="text-right">
-                 <p class="text-xs text-gray-400 uppercase tracking-wider font-medium">Est. Budget</p>
-                 <p class="font-bold text-brand-charcoal">
+               <p class="caption">Est. Budget</p>
+               <p class="font-bold text-primary">
                    <% if trip.trip_budget %>
-                     <%= number_to_currency(trip.trip_budget.total_trip_cost, precision: 0) %>
+                     <%= format_in_display_currency(trip.trip_budget.total_trip_cost, trip.currency) %>
                    <% else %>
                      ---
                    <% end %>
@@ -67,14 +89,13 @@
       <% end %>
     </div>
   <% else %>
-    <!-- Empty State -->
     <div class="text-center py-24">
-      <div class="w-24 h-24 bg-brand-yellow/10 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+      <div class="w-24 h-24 bg-brand-yellow/10 dark:bg-brand-yellow/20 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
         🏝
       </div>
-      <h2 class="text-3xl font-bold text-brand-charcoal mb-4">No trips planned yet</h2>
-      <p class="text-gray-500 max-w-md mx-auto mb-8">Start planning your next adventure. We'll help you budget every step of the way.</p>
-      <%= link_to "Plan your first trip", new_trip_path, class: "btn-primary text-lg px-8 py-4 rounded-xl inline-block" %>
+      <h2 class="text-3xl font-bold text-primary mb-4">No trips planned yet</h2>
+      <p class="text-muted max-w-md mx-auto mb-8">Start planning your next adventure. We'll help you budget every step of the way.</p>
+      <%= link_to "Plan your first trip", new_trip_path, class: "btn-primary btn-lg inline-block cursor-pointer" %>
     </div>
   <% end %>
 </div>

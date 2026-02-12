@@ -2,126 +2,121 @@
 
 <div class="max-w-4xl mx-auto">
   <div class="mb-8">
-    <div class="flex items-center gap-4 text-sm font-medium text-gray-400">
-      <span class="text-brand-charcoal">1. Destination & Dates</span>
+    <div class="flex items-center gap-4 text-sm font-medium text-muted">
+      <span class="text-primary">1. Destination & Dates</span>
       <div class="w-8 h-px bg-brand-yellow"></div>
-      <span class="text-brand-charcoal">2. Preferences</span>
-      <div class="w-8 h-px bg-gray-200"></div>
+      <span class="text-primary">2. Preferences</span>
+      <div class="w-8 h-px bg-billi-ink/20 dark:bg-billi-cream/20"></div>
       <span>3. Budget</span>
     </div>
   </div>
 
-  <div class="bg-white rounded-2xl shadow-sm p-8">
+  <div class="card p-8">
     <%= form_with(model: @preference, url: wizard_update_preferences_trip_path(@trip), method: :patch, local: true, class: "space-y-12") do |f| %>
-      
-      <!-- Accommodation -->
       <section>
-        <h3 class="text-lg font-bold text-brand-charcoal mb-4 flex items-center gap-2">
-          <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">🏨</span>
+        <h3 class="card-title mb-4 flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">🏨</span>
           Accommodation
         </h3>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
            <label class="cursor-pointer">
              <%= f.radio_button :lodging_style, "hotel_only", class: "peer sr-only" %>
-             <div class="p-4 rounded-xl border-2 border-gray-100 peer-checked:border-brand-yellow peer-checked:bg-brand-yellow/5 transition-all">
+             <div class="p-4 rounded-xl border-2 border-gray-100 dark:border-gray-700 peer-checked:border-brand-yellow peer-checked:bg-brand-yellow/5 dark:peer-checked:bg-brand-yellow/10 transition-all">
                <div class="font-medium text-brand-charcoal mb-1">Hotel Only</div>
-               <div class="text-xs text-gray-500">Standard hotels</div>
+               <div class="text-xs text-gray-500 dark:text-gray-400">Standard hotels</div>
              </div>
            </label>
            <label class="cursor-pointer">
              <%= f.radio_button :lodging_style, "airbnb_only", class: "peer sr-only" %>
-             <div class="p-4 rounded-xl border-2 border-gray-100 peer-checked:border-brand-yellow peer-checked:bg-brand-yellow/5 transition-all">
-               <div class="font-medium text-brand-charcoal mb-1">Airbnb Only</div>
-               <div class="text-xs text-gray-500">Apartments & homes</div>
+             <div class="p-4 rounded-xl border-2 border-gray-100 dark:border-gray-700 peer-checked:border-brand-yellow peer-checked:bg-brand-yellow/5 dark:peer-checked:bg-brand-yellow/10 transition-all">
+               <div class="font-medium text-brand-charcoal dark:text-gray-100 mb-1">Airbnb Only</div>
+               <div class="text-xs text-gray-500 dark:text-gray-400">Apartments & homes</div>
              </div>
            </label>
            <label class="cursor-pointer">
              <%= f.radio_button :lodging_style, "mixed", class: "peer sr-only" %>
-             <div class="p-4 rounded-xl border-2 border-gray-100 peer-checked:border-brand-yellow peer-checked:bg-brand-yellow/5 transition-all">
-               <div class="font-medium text-brand-charcoal mb-1">Mixed</div>
-               <div class="text-xs text-gray-500">Best of both worlds</div>
+             <div class="p-4 rounded-xl border-2 border-gray-100 dark:border-gray-700 peer-checked:border-brand-yellow peer-checked:bg-brand-yellow/5 dark:peer-checked:bg-brand-yellow/10 transition-all">
+               <div class="font-medium text-brand-charcoal dark:text-gray-100 mb-1">Mixed</div>
+               <div class="text-xs text-gray-500 dark:text-gray-400">Best of both worlds</div>
              </div>
            </label>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <%= f.label :hotel_nights, "Nights in Hotel", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <%= f.number_field :hotel_nights, class: "w-full rounded-xl border-gray-200 focus:border-brand-yellow focus:ring-brand-yellow" %>
+            <%= f.label :hotel_nights, "Nights in Hotel", class: "label" %>
+            <%= f.number_field :hotel_nights, class: "input" %>
           </div>
           <div>
-             <%= f.label :airbnb_nights, "Nights in Airbnb", class: "block text-sm font-medium text-gray-700 mb-1" %>
-             <%= f.number_field :airbnb_nights, class: "w-full rounded-xl border-gray-200 focus:border-brand-yellow focus:ring-brand-yellow" %>
+             <%= f.label :airbnb_nights, "Nights in Airbnb", class: "label" %>
+             <%= f.number_field :airbnb_nights, class: "input" %>
           </div>
         </div>
-        <p class="text-sm text-gray-400 mt-2">Total trip duration: <%= @trip.duration_nights %> nights</p>
+        <p class="help-text mt-2">Total trip duration: <%= @trip.duration_nights %> nights</p>
       </section>
 
-      <hr class="border-gray-100">
+      <hr class="border-gray-100 dark:border-gray-700">
 
-      <!-- Food -->
       <section>
-        <h3 class="text-lg font-bold text-brand-charcoal mb-4 flex items-center gap-2">
-          <span class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center">🍽</span>
+        <h3 class="card-title mb-4 flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center">🍽</span>
           Food & Dining
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <%= f.label :fancy_restaurant_meals, "Fancy Meals", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <div class="text-xs text-gray-400 mb-2">Fine dining experiences</div>
-            <%= f.number_field :fancy_restaurant_meals, class: "w-full rounded-xl border-gray-200 focus:border-brand-yellow focus:ring-brand-yellow" %>
+            <%= f.label :fancy_restaurant_meals, "Fancy Meals", class: "label" %>
+            <div class="help-text mb-2">Fine dining experiences</div>
+            <%= f.number_field :fancy_restaurant_meals, class: "input" %>
           </div>
           <div>
-            <%= f.label :casual_restaurant_meals, "Casual Meals", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <div class="text-xs text-gray-400 mb-2">Standard sit-down</div>
-            <%= f.number_field :casual_restaurant_meals, class: "w-full rounded-xl border-gray-200 focus:border-brand-yellow focus:ring-brand-yellow" %>
+            <%= f.label :casual_restaurant_meals, "Casual Meals", class: "label" %>
+            <div class="help-text mb-2">Standard sit-down</div>
+            <%= f.number_field :casual_restaurant_meals, class: "input" %>
           </div>
           <div>
-            <%= f.label :street_food_meals, "Street Food / Cheap", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <div class="text-xs text-gray-400 mb-2">Quick bites</div>
-            <%= f.number_field :street_food_meals, class: "w-full rounded-xl border-gray-200 focus:border-brand-yellow focus:ring-brand-yellow" %>
+            <%= f.label :street_food_meals, "Street Food / Cheap", class: "label" %>
+            <div class="help-text mb-2">Quick bites</div>
+            <%= f.number_field :street_food_meals, class: "input" %>
           </div>
         </div>
       </section>
 
-      <hr class="border-gray-100">
+      <hr class="border-gray-100 dark:border-gray-700">
 
-      <!-- Activities & Fun -->
       <section>
-        <h3 class="text-lg font-bold text-brand-charcoal mb-4 flex items-center gap-2">
-          <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center">🎉</span>
+        <h3 class="card-title mb-4 flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center">🎉</span>
           Activities & Fun
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <%= f.label :activities_count, "Paid Activities", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <div class="text-xs text-gray-400 mb-2">Tours, museums, tickets</div>
-            <%= f.number_field :activities_count, class: "w-full rounded-xl border-gray-200 focus:border-brand-yellow focus:ring-brand-yellow" %>
+            <%= f.label :activities_count, "Paid Activities", class: "label" %>
+            <div class="help-text mb-2">Tours, museums, tickets</div>
+            <%= f.number_field :activities_count, class: "input" %>
           </div>
           <div>
-            <%= f.label :nightlife_nights, "Nights Out", class: "block text-sm font-medium text-gray-700 mb-1" %>
-            <div class="text-xs text-gray-400 mb-2">Drinks, clubs, bars</div>
-            <%= f.number_field :nightlife_nights, class: "w-full rounded-xl border-gray-200 focus:border-brand-yellow focus:ring-brand-yellow" %>
+            <%= f.label :nightlife_nights, "Nights Out", class: "label" %>
+            <div class="help-text mb-2">Drinks, clubs, bars</div>
+            <%= f.number_field :nightlife_nights, class: "input" %>
           </div>
         </div>
       </section>
 
-      <hr class="border-gray-100">
-      
-      <!-- Shopping -->
-       <section>
-        <h3 class="text-lg font-bold text-brand-charcoal mb-4 flex items-center gap-2">
-          <span class="w-8 h-8 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center">🛍</span>
+      <hr class="border-gray-100 dark:border-gray-700">
+
+      <section>
+        <h3 class="card-title mb-4 flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 flex items-center justify-center">🛍</span>
           Shopping
         </h3>
         <div>
-           <%= f.label :shopping_budget_level, "Shopping Intensity", class: "block text-sm font-medium text-gray-700 mb-2" %>
+           <%= f.label :shopping_budget_level, "Shopping Intensity", class: "label mb-2" %>
            <div class="flex gap-4">
              <% ['low', 'medium', 'high', 'luxury'].each do |level| %>
                <label class="cursor-pointer">
                  <%= f.radio_button :shopping_budget_level, level, class: "peer sr-only" %>
-                 <div class="px-4 py-2 rounded-lg border border-gray-200 peer-checked:bg-brand-charcoal peer-checked:text-white peer-checked:border-brand-charcoal transition-all capitalize text-sm">
+                 <div class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 peer-checked:bg-brand-charcoal peer-checked:text-billi-cream peer-checked:border-brand-charcoal transition-all capitalize text-sm">
                    <%= level %>
                  </div>
                </label>
@@ -129,17 +124,16 @@
            </div>
         </div>
       </section>
-      
-      <hr class="border-gray-100">
 
-      <!-- Notes -->
+      <hr class="border-gray-100 dark:border-gray-700">
+
       <section>
-        <%= f.label :notes, "Any specific requests or notes?", class: "block text-sm font-medium text-brand-charcoal mb-2" %>
-        <%= f.text_area :notes, rows: 3, class: "w-full rounded-xl border-gray-200 focus:border-brand-yellow focus:ring-brand-yellow", placeholder: "e.g. We want to do a helicopter tour..." %>
+        <%= f.label :notes, "Any specific requests or notes?", class: "label mb-2" %>
+        <%= f.text_area :notes, rows: 3, class: "input", placeholder: "e.g. We want to do a helicopter tour..." %>
       </section>
 
       <div class="pt-6 flex items-center justify-end gap-4">
-        <%= link_to "Back", new_trip_path, class: "text-gray-500 hover:text-brand-charcoal font-medium" %>
+        <%= link_to "Back", new_trip_path, class: "btn-ghost" %>
         <%= f.submit "Generate Budget", class: "btn-primary cursor-pointer" %>
       </div>
     <% end %>

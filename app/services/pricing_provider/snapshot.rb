@@ -11,8 +11,11 @@ module PricingProvider
       city = City.find_by(name: @city_name)
       # Try to match country if possible, but City name is primary key in our seeds.
       
-      snapshot = city&.price_snapshots&.recent&.first
-      
+# Prefer latest real (API) snapshot; fall back to latest estimated
+      snapshot = city&.price_snapshots&.where(source: "traveltables")&.recent&.first
+      snapshot ||= city&.price_snapshots&.where(source: "estimated")&.recent&.first
+      snapshot ||= city&.price_snapshots&.recent&.first
+
       return nil unless snapshot
       
       data = snapshot.data

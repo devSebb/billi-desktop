@@ -32,7 +32,7 @@ class FriendsController < ApplicationController
     @balances = []
     
     @participants.each do |participant|
-      paid = @expenses.where(payer_id: participant.id).sum(:amount)
+      paid = @expenses.where(payer_participant_id: participant.id).sum(:amount)
       balance = paid - share_per_person
       
       @balances << {

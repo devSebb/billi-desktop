@@ -1,32 +1,74 @@
 namespace :cost_of_living do
-  desc "Preload initial snapshots for supported cities (max 10 per run)"
+  desc "Preload initial snapshots for cities with no data (max 10 per run, rate-limit friendly)"
   task preload_initial_snapshots: :environment do
-    puts "Starting preload check..."
+    api_key = ENV["RAPIDAPI_COST_LIVING_KEY"] || Rails.application.credentials.dig(:rapidapi, :cost_living_key)
 
-    # Find cities with 0 snapshots
-    # We use left_outer_joins to find cities without snapshots efficiently
-    cities_needed = City.where.missing(:price_snapshots).limit(10)
+    puts "--- Cost of Living: Preload initial snapshots ---"
+    puts ""
 
-    if cities_needed.empty?
-      puts "All supported cities already have an initial snapshot; nothing to preload."
-      next
+    unless api_key.present?
+      puts "ERROR: API key missing."
+      puts "Set RAPIDAPI_COST_LIVING_KEY in .env or add rapidapi.cost_living_key to Rails credentials."
+      exit 1
+    end
+    puts "API key: present"
+    puts ""
+
+    # Only cities with zero snapshots; minimal columns; cap at 10 to respect rate limits
+    cities = City
+      .select(:id, :name, :country)
+      .where.missing(:price_snapshots)
+      .limit(10)
+      .to_a
+
+    if cities.empty?
+      puts "No cities need preloading (all have at least one snapshot)."
+      puts "Done."
+      exit 0
     end
 
-    puts "Found #{cities_needed.count} cities needing initialization (fetching max 10)..."
+    puts "Cities with no snapshot yet: #{cities.size} (max 10 per run)"
+    cities.each_with_index { |c, i| puts "  #{i + 1}. #{c.name}, #{c.country}" }
+    puts ""
 
-    cities_needed.each do |city|
-      puts "Fetching for #{city.name}, #{city.country}..."
+    succeeded = []
+    failed = {}
+
+    cities.each_with_index do |city, index|
+      n = index + 1
+      total = cities.size
+      print "[#{n}/#{total}] #{city.name}, #{city.country} ... "
+      $stdout.flush
+
       begin
         CostOfLiving::UpdateCitySnapshot.call(city)
-        puts "  -> Success."
+        puts "OK"
+        succeeded << "#{city.name}, #{city.country}"
+      rescue CostOfLiving::RateLimitError => e
+        puts "RATE LIMITED"
+        puts ""
+        puts "*** Stopping: API rate limit (429) hit. ***"
+        puts e.message
+        puts "Only 1 city was attempted this run. Run again later (e.g. in 1 hour) to fetch more."
+        puts "On RapidAPI free tier you may have very few requests per hour/month."
+        exit 1
       rescue => e
-        puts "  -> Failed: #{e.message}"
+        puts "FAILED"
+        failed["#{city.name}, #{city.country}"] = e.message
       end
-      
-      sleep 1
+
+      sleep 1 if n < total
     end
 
-    puts "Done. Run again in 1 hour if more cities remain."
+    puts ""
+    puts "--- Summary ---"
+    puts "Succeeded: #{succeeded.size}"
+    succeeded.each { |s| puts "  + #{s}" }
+    if failed.any?
+      puts "Failed: #{failed.size}"
+      failed.each { |city, msg| puts "  - #{city}: #{msg}" }
+    end
+    puts ""
+    puts "Done. Run again later to preload more cities (rate limit: run periodically)."
   end
 end
-

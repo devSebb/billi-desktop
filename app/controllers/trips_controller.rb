@@ -4,6 +4,7 @@ class TripsController < ApplicationController
 
   def index
     @trips = current_user.trips.order(created_at: :desc)
+    @featured_city_snapshots = FeaturedCitySnapshots.call(limit: 10)
   end
 
   def show
@@ -15,12 +16,13 @@ class TripsController < ApplicationController
 
   def new
     @trip = current_user.trips.build
+    @cities = City.order(:name)
   end
 
   def create
     @trip = current_user.trips.build(trip_params)
+    apply_city_from_params if (params.dig(:trip, :city_id) || params[:city_id]).present?
     if @trip.save
-      @trip.create_trip_preference!
       redirect_to wizard_step_2_trip_path(@trip)
     else
       render :new, status: :unprocessable_entity
@@ -28,10 +30,13 @@ class TripsController < ApplicationController
   end
 
   def edit
+    @cities = City.order(:name)
   end
 
   def update
-    if @trip.update(trip_params)
+    @trip.assign_attributes(trip_params)
+    apply_city_from_params if (params.dig(:trip, :city_id) || params[:city_id]).present?
+    if @trip.save
       if @trip.trip_budget.present?
         BudgetGenerator.new(@trip).call
       end
@@ -73,6 +78,15 @@ class TripsController < ApplicationController
 
   def trip_params
     params.require(:trip).permit(:name, :destination_city, :destination_country, :start_date, :end_date, :travelers_count, :currency)
+  end
+
+  def apply_city_from_params
+    city_id = params[:trip][:city_id] || params[:city_id]
+    city = City.find_by(id: city_id)
+    return unless city
+
+    @trip.destination_city = city.name
+    @trip.destination_country = city.country
   end
 
   def preference_params

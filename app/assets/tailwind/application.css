@@ -1,20 +1,589 @@
 @import "tailwindcss";
 
+/* Use class-based dark mode so the theme toggle (adding .dark to <html>) works */
+@custom-variant dark (&&:where(.dark, .dark *));
+
 @theme {
+  /* Brand: yellow for accents; charcoal for text ON yellow and dark surfaces (must stay dark for contrast) */
   --color-brand-yellow: #F7B500;
   --color-brand-charcoal: #1F2933;
   --color-brand-teal: #00A8A8;
+  /* Semantic text: main and muted, consistent across app */
+  --color-billi-ink: #252525;
+  --color-billi-ink-muted: #5c5c5c;
+  --color-billi-cream: #EBEBE8;
+  --color-billi-cream-muted: #a8a8a3;
+  /* Surfaces for consistent backgrounds */
+  --color-billi-bg: #f2f2f0;
+  --color-billi-bg-muted: #e8e8e6;
+  --color-billi-surface: #ffffff;
+  --color-billi-bg-dark: #1a1d21;
+  --color-billi-surface-dark: #24282e;
   --font-sans: 'Satoshi', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Inter', 'sans-serif';
+  --font-display: 'Cabinet Grotesk', 'Satoshi', system-ui, sans-serif;
+
+  /* Landing palette */
+  --color-landing-cream: #FDFAF5;
+  --color-landing-saffron: #F5A623;
+  --color-landing-saffron-light: #FFF3D6;
+  --color-landing-charcoal: #1A1F25;
+  --color-landing-teal: #0EA5A5;
+  --color-landing-ink-muted: #64748B;
+  --color-landing-slate: #111518;
 }
 
+/* ---------------------------------------------------------------------------
+   Design tokens (light/dark) — applied via .dark on html
+   --------------------------------------------------------------------------- */
+@layer base {
+  :root {
+    --billi-bg-page: #f2f2f0;
+    --billi-bg-surface: #ffffff;
+    --billi-bg-muted: #e8e8e6;
+    --billi-border: #d4d4d0;
+    --billi-text: #252525;
+    --billi-text-muted: #5c5c5c;
+    --billi-success: #059669;
+    --billi-warn: #d97706;
+    --billi-error: #dc2626;
+  }
+  .dark {
+    --billi-bg-page: #1a1d21;
+    --billi-bg-surface: #24282e;
+    --billi-bg-muted: #2d333b;
+    --billi-border: #374151;
+    --billi-text: #EBEBE8;
+    --billi-text-muted: #a8a8a3;
+    --billi-success: #34d399;
+    --billi-warn: #fbbf24;
+    --billi-error: #f87171;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Typography — main text billi-ink (light mode) / billi-cream (dark), muted for subtext
+   --------------------------------------------------------------------------- */
 @layer components {
+  .text-primary {
+    @apply text-billi-ink dark:text-billi-cream;
+  }
+  .text-muted {
+    @apply text-billi-ink-muted dark:text-billi-cream-muted;
+  }
+  .page-title {
+    @apply text-2xl font-bold text-billi-ink dark:text-billi-cream tracking-tight;
+  }
+  .section-title {
+    @apply text-xl font-bold text-billi-ink dark:text-billi-cream;
+  }
+  .card-title {
+    @apply text-lg font-bold text-billi-ink dark:text-billi-cream;
+  }
+  .label {
+    @apply block text-sm font-medium text-billi-ink dark:text-billi-cream mb-1;
+  }
+  .help-text {
+    @apply mt-1 text-xs text-billi-ink-muted dark:text-billi-cream-muted;
+  }
+  .caption {
+    @apply text-xs font-medium text-billi-ink-muted dark:text-billi-cream-muted uppercase tracking-wider;
+  }
+
+  /* -------------------------------------------------------------------------
+     Buttons (base: inline-flex, justify-center, font-medium, rounded-xl, transition, focus-visible)
+     ------------------------------------------------------------------------- */
   .btn-primary {
-    @apply bg-brand-yellow text-brand-charcoal font-medium px-6 py-2 rounded-lg shadow-sm hover:bg-yellow-400 transition-colors duration-200;
+    @apply inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-brand-yellow text-brand-charcoal px-6 py-3 shadow-sm hover:bg-yellow-400 dark:focus-visible:ring-offset-billi-bg-dark;
   }
   .btn-secondary {
-    @apply border border-brand-charcoal text-brand-charcoal font-medium px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200;
+    @apply inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border border-billi-ink/20 dark:border-billi-cream/30 text-billi-ink dark:text-billi-cream bg-transparent hover:bg-billi-bg dark:hover:bg-billi-surface-dark px-6 py-3;
   }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed text-billi-ink-muted dark:text-billi-cream-muted hover:bg-billi-bg dark:hover:bg-billi-surface-dark px-4 py-2;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/40 px-4 py-2;
+  }
+  .btn-icon {
+    @apply inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed p-2 rounded-lg text-billi-ink-muted dark:text-billi-cream-muted hover:text-billi-ink dark:hover:text-billi-cream hover:bg-billi-bg dark:hover:bg-billi-surface-dark;
+  }
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+  .btn-lg {
+    @apply px-8 py-4 text-base;
+  }
+
+  /* -------------------------------------------------------------------------
+     Inputs
+     ------------------------------------------------------------------------- */
+  .input {
+    @apply block w-full rounded-xl border border-billi-ink/15 dark:border-billi-cream/20 bg-billi-surface dark:bg-billi-surface-dark text-billi-ink dark:text-billi-cream px-4 py-3 text-sm placeholder-billi-ink-muted dark:placeholder-billi-cream-muted focus:outline-none focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow dark:focus:border-brand-yellow dark:focus:ring-brand-yellow transition-colors;
+  }
+  .input--error {
+    @apply border-red-500 dark:border-red-400 focus:border-red-500 focus:ring-red-500;
+  }
+  select.input {
+    @apply pr-10 appearance-none bg-no-repeat;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-size: 1.25rem;
+  }
+  textarea.input {
+    @apply min-h-[80px] resize-y;
+  }
+
+  /* -------------------------------------------------------------------------
+     Cards & sections
+     ------------------------------------------------------------------------- */
   .card {
-    @apply bg-white rounded-2xl shadow-lg p-6;
+    @apply bg-billi-surface dark:bg-billi-surface-dark rounded-2xl shadow-sm p-6 dark:border dark:border-billi-cream/10;
+  }
+  .card--bordered {
+    @apply bg-billi-surface dark:bg-billi-surface-dark rounded-2xl shadow-sm p-6 border border-billi-ink/10 dark:border-billi-cream/10;
+  }
+  .section {
+    @apply space-y-6;
+  }
+  .section-gap {
+    @apply mb-8 last:mb-0;
+  }
+
+  /* -------------------------------------------------------------------------
+     Badges / pills
+     ------------------------------------------------------------------------- */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+  }
+  .badge--muted {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-billi-bg-muted dark:bg-gray-700 text-billi-ink-muted dark:text-billi-cream-muted;
+  }
+  .badge--accent {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-yellow/25 dark:bg-brand-yellow/30 text-brand-charcoal;
+  }
+  .badge--teal {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-teal/10 dark:bg-brand-teal/20 text-brand-teal;
+  }
+  .badge--success {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300;
+  }
+  .badge--error {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300;
+  }
+
+  /* -------------------------------------------------------------------------
+     Tabs (Overview / Budget / Collaborators)
+     ------------------------------------------------------------------------- */
+  .tabs {
+    @apply flex items-center gap-1 border-b border-billi-ink/15 dark:border-billi-cream/15 mb-8;
+  }
+  .tabs__item {
+    @apply px-6 py-3 font-medium text-sm border-b-2 border-transparent text-billi-ink-muted dark:text-billi-cream-muted hover:text-billi-ink dark:hover:text-billi-cream transition-colors;
+  }
+  .tabs__item--active {
+    @apply border-brand-yellow text-billi-ink dark:text-billi-cream;
+  }
+
+  /* =========================================================================
+     LANDING PAGE — Scoped design system (force-light, no dark: variants)
+     ========================================================================= */
+
+  /* --- Landing root wrapper: force light mode, set palette --- */
+  .landing {
+    background-color: var(--color-landing-cream);
+    color: var(--color-landing-charcoal);
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+  /* Hide scrollbar on horizontal scroll strips */
+  .landing-hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .landing-hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* --- Typography --- */
+  .landing-headline {
+    font-family: var(--font-display);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  .landing-headline-secondary {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+  .tracking-tight-landing {
+    letter-spacing: -0.03em;
+  }
+
+  /* --- Premium shadow set --- */
+  .landing-shadow-sm { box-shadow: 0 1px 2px rgba(26, 31, 37, 0.05); }
+  .landing-shadow-md { box-shadow: 0 4px 12px rgba(26, 31, 37, 0.08); }
+  .landing-shadow-lg { box-shadow: 0 12px 40px rgba(26, 31, 37, 0.12); }
+  .landing-shadow-xl { box-shadow: 0 24px 60px rgba(26, 31, 37, 0.16); }
+  .landing-shadow-hero { box-shadow: 0 40px 80px rgba(26, 31, 37, 0.15); }
+
+  /* --- Glass navbar --- */
+  .landing-nav {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                backdrop-filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .landing-nav.is-transparent {
+    background-color: transparent;
+    border-bottom: 1px solid transparent;
+    box-shadow: none;
+  }
+  .landing-nav.is-glass {
+    background-color: rgba(253, 250, 245, 0.85);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    border-bottom: 1px solid rgba(26, 31, 37, 0.06);
+    box-shadow: 0 1px 3px rgba(26, 31, 37, 0.04);
+  }
+
+  /* --- Scroll progress bar (thin line at top of page) --- */
+  .landing-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-landing-saffron), var(--color-landing-teal));
+    z-index: 9999;
+    transform-origin: left;
+    transition: none;
+  }
+
+  /* --- CTA buttons --- */
+  .landing-cta-primary {
+    @apply inline-flex items-center justify-center font-bold rounded-full transition-all duration-300;
+    background-color: var(--color-landing-charcoal);
+    color: var(--color-landing-saffron);
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .landing-cta-primary:hover {
+    background-color: var(--color-landing-saffron);
+    color: var(--color-landing-charcoal);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(245, 166, 35, 0.3);
+  }
+  .landing-cta-primary:focus-visible {
+    outline: 2px solid var(--color-landing-saffron);
+    outline-offset: 2px;
+  }
+
+  .landing-cta-secondary {
+    @apply inline-flex items-center gap-2 font-medium transition-all duration-300;
+    color: var(--color-landing-ink-muted);
+    font-size: 1rem;
+  }
+  .landing-cta-secondary:hover {
+    color: var(--color-landing-charcoal);
+  }
+
+  /* --- City Explorer card --- */
+  .landing-city-card {
+    @apply rounded-2xl overflow-hidden flex-shrink-0;
+    width: 320px;
+    scroll-snap-align: center;
+    background: white;
+    border: 1px solid rgba(26, 31, 37, 0.06);
+    box-shadow: 0 4px 12px rgba(26, 31, 37, 0.08);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .landing-city-card:hover {
+    transform: scale(1.03) translateY(-4px);
+    box-shadow: 0 24px 60px rgba(26, 31, 37, 0.16);
+  }
+
+  /* --- Scroll affordance gradient fades for horizontal strip --- */
+  .landing-scroll-fade-left,
+  .landing-scroll-fade-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .landing-scroll-fade-left {
+    left: 0;
+    background: linear-gradient(to right, var(--color-landing-cream), transparent);
+  }
+  .landing-scroll-fade-right {
+    right: 0;
+    background: linear-gradient(to left, var(--color-landing-cream), transparent);
+  }
+
+  /* --- Browser frame mockup --- */
+  .landing-browser-frame {
+    @apply rounded-2xl overflow-hidden;
+    background: white;
+    border: 1px solid rgba(26, 31, 37, 0.08);
+    box-shadow: 0 40px 80px rgba(26, 31, 37, 0.15);
+  }
+  .landing-browser-chrome {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #f8f8f7;
+    border-bottom: 1px solid rgba(26, 31, 37, 0.06);
+  }
+  .landing-browser-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* --- Section divider (soft gradient transition) --- */
+  .landing-section-fade {
+    position: relative;
+  }
+  .landing-section-fade::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 120px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* --- Reveal animation classes --- */
+  .reveal-fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-fade-up.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-fade-in {
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-fade-in.is-revealed {
+    opacity: 1;
+  }
+
+  .reveal-scale-in {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-scale-in.is-revealed {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .reveal-slide-left {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-slide-left.is-revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .reveal-slide-right {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-slide-right.is-revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* --- Drag scroll cursor --- */
+  .is-dragging {
+    cursor: grabbing !important;
+    user-select: none;
+  }
+}
+
+/* =========================================================================
+   LANDING KEYFRAMES & NON-LAYER STYLES (outside @layer for specificity)
+   ========================================================================= */
+
+/* Hero entrance stagger (page load) */
+@keyframes landing-hero-text-reveal {
+  from {
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes landing-fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes landing-scale-fade {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes landing-float-up {
+  from {
+    opacity: 0;
+    transform: perspective(1200px) rotateY(-4deg) rotateX(2deg) translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(1200px) rotateY(-4deg) rotateX(2deg) translateY(0);
+  }
+}
+
+/* SVG brush highlight draw-on animation */
+@keyframes landing-brush-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Continuous float for hero product shot */
+@keyframes landing-float-slow {
+  0%, 100% { transform: perspective(1200px) rotateY(-4deg) rotateX(2deg) translateY(0px); }
+  50%      { transform: perspective(1200px) rotateY(-4deg) rotateX(2deg) translateY(-12px); }
+}
+
+/* Blob drift (continuous, background) */
+@keyframes landing-blob-drift-1 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(15px, -20px, 0) scale(1.05); }
+  66%      { transform: translate3d(-10px, 10px, 0) scale(0.97); }
+}
+@keyframes landing-blob-drift-2 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(-20px, 15px, 0) scale(0.95); }
+  66%      { transform: translate3d(10px, -10px, 0) scale(1.03); }
+}
+
+/* Scroll indicator bounce */
+@keyframes landing-scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50%      { transform: translateY(8px); opacity: 0.5; }
+}
+
+/* Sun pulse in footer */
+@keyframes landing-sun-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.15); }
+}
+
+/* Hero entrance animation classes (applied directly, not via scroll-reveal) */
+.landing .hero-anim-headline {
+  animation: landing-hero-text-reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+.landing .hero-anim-subtitle {
+  animation: landing-fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+.landing .hero-anim-cta {
+  animation: landing-scale-fade 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both;
+}
+.landing .hero-anim-visual {
+  animation: landing-float-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+.landing .hero-anim-scroll-hint {
+  animation: landing-fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+}
+
+/* Brush SVG draw */
+.landing .landing-brush-path {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: landing-brush-draw 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
+}
+
+/* Continuous animations */
+.landing .float-slow {
+  animation: landing-float-slow 5s ease-in-out infinite;
+}
+.landing .blob-drift-1 {
+  animation: landing-blob-drift-1 8s ease-in-out infinite;
+}
+.landing .blob-drift-2 {
+  animation: landing-blob-drift-2 10s ease-in-out infinite;
+}
+.landing .scroll-bounce {
+  animation: landing-scroll-bounce 2s ease-in-out infinite;
+}
+.landing .sun-pulse {
+  display: inline-block;
+  animation: landing-sun-pulse 3s ease-in-out infinite;
+}
+
+/* Grain overlay via SVG noise (zero network requests) */
+.landing-grain {
+  position: relative;
+}
+.landing-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 2;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  mix-blend-mode: multiply;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .landing .hero-anim-headline,
+  .landing .hero-anim-subtitle,
+  .landing .hero-anim-cta,
+  .landing .hero-anim-visual,
+  .landing .hero-anim-scroll-hint {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  .landing .landing-brush-path {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .landing .float-slow,
+  .landing .blob-drift-1,
+  .landing .blob-drift-2,
+  .landing .scroll-bounce,
+  .landing .sun-pulse {
+    animation: none !important;
+  }
+  .reveal-fade-up,
+  .reveal-fade-in,
+  .reveal-scale-in,
+  .reveal-slide-left,
+  .reveal-slide-right {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }

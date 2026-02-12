@@ -1,19 +1,17 @@
-<div class="bg-white rounded-2xl shadow-sm p-8">
+<div class="card p-8">
   <div class="flex justify-between items-center mb-6">
-    <h2 class="text-xl font-bold text-brand-charcoal">Trip Participants</h2>
-    <button class="btn-secondary text-sm py-2 px-4 opacity-50 cursor-not-allowed" title="Coming soon">Invite Friend</button>
+    <h2 class="section-title">Trip Participants</h2>
+    <button type="button" class="btn-secondary btn-sm opacity-50 cursor-not-allowed" title="Coming soon">Invite Friend</button>
   </div>
-  
   <div class="space-y-4">
-    <!-- Creator (Implied) -->
-    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+    <div class="flex items-center justify-between p-4 bg-billi-bg dark:bg-billi-surface-dark rounded-xl border border-billi-ink/10 dark:border-billi-cream/10">
       <div class="flex items-center gap-4">
          <div class="w-10 h-10 rounded-full bg-brand-yellow flex items-center justify-center font-bold text-brand-charcoal">
            <%= trip.user.email[0].upcase %>
          </div>
          <div>
-           <div class="font-medium text-brand-charcoal"><%= trip.user.name || "Trip Owner" %></div>
-           <div class="text-xs text-gray-400"><%= trip.user.email %></div>
+           <div class="font-medium text-primary"><%= trip.user.name || "Trip Owner" %></div>
+           <div class="text-xs text-muted"><%= trip.user.email %></div>
          </div>
       </div>
       <div class="text-sm text-brand-yellow font-medium bg-brand-yellow/10 px-3 py-1 rounded-full">
@@ -22,17 +20,17 @@
     </div>
 
     <% trip.trip_participants.each do |participant| %>
-      <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+      <div class="flex items-center justify-between p-4 bg-billi-bg dark:bg-billi-surface-dark rounded-xl border border-billi-ink/10 dark:border-billi-cream/10">
         <div class="flex items-center gap-4">
-           <div class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center font-bold text-gray-500">
+           <div class="w-10 h-10 rounded-full bg-billi-surface dark:bg-billi-surface-dark border border-billi-ink/15 dark:border-billi-cream/15 flex items-center justify-center font-bold text-muted">
              <%= participant.name&.first&.upcase || "?" %>
            </div>
            <div>
-             <div class="font-medium text-brand-charcoal"><%= participant.name %></div>
-             <div class="text-xs text-gray-400"><%= participant.email %></div>
+             <div class="font-medium text-primary"><%= participant.name %></div>
+             <div class="text-xs text-muted"><%= participant.email %></div>
            </div>
         </div>
-        <div class="text-sm text-gray-500">
+        <div class="text-sm text-muted">
           <%= participant.is_user ? "App User" : "Guest" %>
         </div>
       </div>

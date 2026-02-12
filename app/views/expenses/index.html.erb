@@ -1,89 +1,75 @@
 <% content_for :header_title, "Ledger" %>
 
 <div class="max-w-6xl mx-auto">
-  <!-- Filter -->
   <div class="flex justify-between items-center mb-8">
     <div class="relative inline-block text-left">
       <%= form_with url: ledger_path, method: :get, class: "flex items-center gap-4" do |f| %>
-        <label class="text-sm font-medium text-gray-500">Showing expenses for:</label>
+        <label class="label mb-0">Showing expenses for:</label>
         <% if @trips.any? %>
-          <%= f.select :trip_id, options_from_collection_for_select(@trips, :id, :name, @selected_trip&.id), {}, onchange: "this.form.submit()", class: "rounded-xl border-gray-200 py-2 pl-4 pr-10 text-brand-charcoal font-medium focus:ring-brand-teal focus:border-brand-teal" %>
+          <%= f.select :trip_id, options_from_collection_for_select(@trips, :id, :name, @selected_trip&.id), {}, onchange: "this.form.submit()", class: "input w-auto min-w-[200px] py-2.5" %>
         <% else %>
-          <span class="text-gray-400">No trips available</span>
+          <span class="text-muted">No trips available</span>
         <% end %>
       <% end %>
     </div>
-    
     <% if @selected_trip %>
-      <!-- Just a placeholder for now as we don't have a standalone new expense page, 
-           usually this would open a modal or redirect to trip show page -->
-      <%= link_to "Add Expense", trip_path(@selected_trip), class: "btn-primary bg-brand-teal text-white hover:bg-teal-600 border-none" %>
+      <%= link_to "Add Expense", trip_path(@selected_trip), class: "btn-primary bg-brand-teal hover:bg-teal-600 dark:bg-brand-teal dark:hover:bg-teal-500 text-white border-none" %>
     <% end %>
   </div>
 
   <% if @selected_trip %>
-    <!-- Analytics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <!-- Total Spent -->
-      <div class="bg-white rounded-2xl shadow-sm p-6 border-l-4 border-brand-teal">
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Total Spent</p>
-        <p class="text-3xl font-bold text-brand-charcoal"><%= number_to_currency(@expenses.sum(&:amount), precision: 0) %></p>
+      <div class="card border-l-4 border-brand-teal">
+        <p class="caption mb-1">Total Spent</p>
+        <p class="text-3xl font-bold text-primary"><%= format_in_display_currency(@expenses.sum(&:amount), @selected_trip&.currency) %></p>
       </div>
-      
-      <!-- Budget -->
-      <div class="bg-white rounded-2xl shadow-sm p-6 border-l-4 border-brand-yellow">
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Planned Budget</p>
-        <p class="text-3xl font-bold text-brand-charcoal"><%= number_to_currency(@selected_trip.trip_budget&.total_trip_cost || 0, precision: 0) %></p>
+      <div class="card border-l-4 border-brand-yellow">
+        <p class="caption mb-1">Planned Budget</p>
+        <p class="text-3xl font-bold text-primary"><%= format_in_display_currency(@selected_trip.trip_budget&.total_trip_cost || 0, @selected_trip.currency) %></p>
       </div>
-      
-      <!-- Remaining -->
-      <div class="bg-white rounded-2xl shadow-sm p-6 border-l-4 border-gray-200">
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Remaining</p>
-        <% remaining = (@selected_trip.trip_budget&.total_trip_cost || 0) - @expenses.sum(&:amount) %>
-        <p class="text-3xl font-bold <%= remaining < 0 ? 'text-red-500' : 'text-green-500' %>">
-          <%= number_to_currency(remaining, precision: 0) %>
+      <% remaining = (@selected_trip.trip_budget&.total_trip_cost || 0) - @expenses.sum(&:amount) %>
+      <div class="card border-l-4 border-billi-ink/20 dark:border-billi-cream/20">
+        <p class="caption mb-1">Remaining</p>
+        <p class="text-3xl font-bold <%= remaining < 0 ? 'text-red-500 dark:text-red-400' : 'text-green-500 dark:text-green-400' %>">
+          <%= format_in_display_currency(remaining, @selected_trip.currency) %>
         </p>
       </div>
     </div>
 
-    <!-- Table -->
-    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-100">
-        <thead class="bg-gray-50">
+    <div class="card p-0 overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-700">
+        <thead class="bg-billi-bg dark:bg-billi-surface-dark">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Description</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Category</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Amount</th>
+            <th scope="col" class="px-6 py-3 text-left caption">Date</th>
+            <th scope="col" class="px-6 py-3 text-left caption">Description</th>
+            <th scope="col" class="px-6 py-3 text-left caption">Category</th>
+            <th scope="col" class="px-6 py-3 text-left caption">Amount</th>
             <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-100">
+        <tbody class="bg-billi-surface dark:bg-billi-surface-dark divide-y divide-billi-ink/10 dark:divide-billi-cream/10">
           <% @expenses.each do |expense| %>
-            <tr class="hover:bg-gray-50/50 transition-colors">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <tr class="hover:bg-billi-bg/50 dark:hover:bg-billi-bg-dark/50 transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-muted">
                 <%= expense.spent_at&.strftime("%b %d") || "N/A" %>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-brand-charcoal">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">
                 <%= expense.description %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                  <%= expense.category&.titleize %>
-                </span>
+                <span class="badge badge--muted"><%= expense.category&.titleize %></span>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-brand-charcoal">
-                <%= number_to_currency(expense.amount) %>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-primary">
+                <%= format_in_display_currency(expense.amount, @selected_trip.currency) %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <%= button_to "Delete", trip_expense_path(@selected_trip, expense), method: :delete, class: "text-red-400 hover:text-red-600 bg-transparent border-none cursor-pointer", form: { data: { turbo_confirm: "Are you sure?" }, style: "display:inline;" } %>
+                <%= button_to "Delete", trip_expense_path(@selected_trip, expense), method: :delete, class: "text-red-400 hover:text-red-600 dark:hover:text-red-400 bg-transparent border-none cursor-pointer text-sm", form: { data: { turbo_confirm: "Are you sure?" }, style: "display:inline;" } %>
               </td>
             </tr>
           <% end %>
-          
           <% if @expenses.empty? %>
             <tr>
-              <td colspan="5" class="px-6 py-12 text-center text-gray-400">
+              <td colspan="5" class="px-6 py-12 text-center text-muted">
                 No expenses recorded yet.
               </td>
             </tr>
@@ -93,7 +79,7 @@
     </div>
 
   <% else %>
-    <div class="text-center py-24 text-gray-500">
+    <div class="text-center py-24 text-muted">
       <% if @trips.any? %>
         Please select a trip to view the ledger.
       <% else %>

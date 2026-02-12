@@ -1,0 +1,235 @@
+<%# Feature Showcase — alternating layout, 4 key differentiators %>
+<section id="features" class="relative py-24 lg:py-32"
+         style="background: white;">
+  <div class="max-w-screen-xl mx-auto px-6">
+    <%# Section header %>
+    <div class="text-center mb-20" data-controller="scroll-reveal">
+      <span class="reveal-fade-up inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6"
+            data-reveal-delay="0"
+            style="background: rgba(14,165,165,0.1); color: var(--color-landing-teal);">
+        Features
+      </span>
+      <h2 class="reveal-fade-up landing-headline-secondary text-3xl md:text-4xl lg:text-5xl mb-5"
+          data-reveal-delay="80"
+          style="color: var(--color-landing-charcoal);">
+        Everything you need. Nothing you don't.
+      </h2>
+      <p class="reveal-fade-up text-lg max-w-xl mx-auto"
+         data-reveal-delay="160"
+         style="color: var(--color-landing-ink-muted);">
+        Built for travelers who want clarity, not complexity.
+      </p>
+    </div>
+
+    <%# Feature blocks — alternating layout %>
+    <div class="space-y-24 lg:space-y-32">
+
+      <%# Feature 1: Real cost-of-living data (text left, visual right) %>
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center" data-controller="scroll-reveal">
+        <div>
+          <div class="reveal-fade-up inline-flex items-center px-3 py-1 rounded-full text-xs font-bold mb-5"
+               data-reveal-delay="0"
+               style="background: rgba(14,165,165,0.1); color: var(--color-landing-teal);">
+            Real data
+          </div>
+          <h3 class="reveal-fade-up text-2xl md:text-3xl font-bold tracking-tight-landing mb-4"
+              data-reveal-delay="80"
+              style="color: var(--color-landing-charcoal);">
+            Budgets built on reality, not guesswork
+          </h3>
+          <p class="reveal-fade-up text-base md:text-lg leading-relaxed mb-6"
+             data-reveal-delay="160"
+             style="color: var(--color-landing-ink-muted);">
+            We pull pricing data from trusted cost-of-living sources for hundreds of cities. Every meal, beer, taxi ride, and hotel night is backed by real-world averages.
+          </p>
+          <div class="reveal-fade-up space-y-3" data-reveal-delay="240">
+            <% ["Updated cost-of-living snapshots", "9 categories from meals to transit", "Multiple data sources per city"].each do |item| %>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                     style="background: rgba(14,165,165,0.15);">
+                  <svg class="w-3 h-3" style="color: var(--color-landing-teal);" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <span class="text-sm font-medium" style="color: var(--color-landing-charcoal);"><%= item %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="reveal-slide-left" data-reveal-delay="120">
+          <div class="rounded-2xl p-6 space-y-4" style="background: var(--color-landing-cream); border: 1px solid rgba(26,31,37,0.06);">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-xl">🇵🇹</span>
+              <div>
+                <div class="text-sm font-bold" style="color: var(--color-landing-charcoal);">Lisbon, Portugal</div>
+                <div class="text-xs" style="color: var(--color-landing-ink-muted);">Cost snapshot · USD</div>
+              </div>
+              <span class="ml-auto inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold"
+                    style="background: rgba(14,165,165,0.1); color: var(--color-landing-teal);">
+                Real data
+              </span>
+            </div>
+            <% [
+              { label: "Meal, inexpensive", price: "$8.50", icon: "🍜" },
+              { label: "Meal, mid-range", price: "$22.00", icon: "🍽️" },
+              { label: "Beer (0.5L draught)", price: "$3.20", icon: "🍺" },
+              { label: "Cappuccino", price: "$2.80", icon: "☕" },
+              { label: "One-way transit", price: "$1.80", icon: "🚇" },
+              { label: "Rent 1BR, centre (mo)", price: "$1,200", icon: "🏠" },
+            ].each do |row| %>
+              <div class="flex items-center justify-between py-2 border-b" style="border-color: rgba(26,31,37,0.04);">
+                <div class="flex items-center gap-3">
+                  <span class="text-base"><%= row[:icon] %></span>
+                  <span class="text-sm" style="color: var(--color-landing-charcoal);"><%= row[:label] %></span>
+                </div>
+                <span class="text-sm font-bold font-mono" style="color: var(--color-landing-charcoal);"><%= row[:price] %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <%# Feature 2: Personalized budget (visual left, text right) %>
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center" data-controller="scroll-reveal">
+        <div class="lg:order-2">
+          <div class="reveal-fade-up inline-flex items-center px-3 py-1 rounded-full text-xs font-bold mb-5"
+               data-reveal-delay="0"
+               style="background: rgba(245,166,35,0.1); color: var(--color-landing-saffron);">
+            Personalized
+          </div>
+          <h3 class="reveal-fade-up text-2xl md:text-3xl font-bold tracking-tight-landing mb-4"
+              data-reveal-delay="80"
+              style="color: var(--color-landing-charcoal);">
+            A budget that adapts to your style
+          </h3>
+          <p class="reveal-fade-up text-base md:text-lg leading-relaxed"
+             data-reveal-delay="160"
+             style="color: var(--color-landing-ink-muted);">
+            Street food lover? Boutique hotel fan? Tripstein builds a budget around <em>your</em> travel style — not a one-size-fits-all estimate.
+          </p>
+        </div>
+        <div class="lg:order-1 reveal-slide-right" data-reveal-delay="120">
+          <div class="rounded-2xl p-6" style="background: var(--color-landing-cream); border: 1px solid rgba(26,31,37,0.06);">
+            <div class="flex items-center justify-between mb-5">
+              <div class="text-sm font-bold" style="color: var(--color-landing-charcoal);">Your preferences</div>
+              <div class="text-lg font-black font-mono px-3 py-1 rounded-lg"
+                   style="background: linear-gradient(135deg, var(--color-landing-saffron), #F7C948); color: var(--color-landing-charcoal);">
+                $2,450
+              </div>
+            </div>
+            <% [
+              { label: "Accommodation", level: "Mid-range", pct: 55, color: "var(--color-landing-saffron)" },
+              { label: "Dining", level: "Casual + fancy mix", pct: 50, color: "var(--color-landing-teal)" },
+              { label: "Activities", level: "Active", pct: 70, color: "#6366F1" },
+              { label: "Nightlife", level: "Moderate", pct: 40, color: "#EC4899" },
+            ].each do |item| %>
+              <div class="mb-4 last:mb-0">
+                <div class="flex justify-between text-sm mb-2">
+                  <span class="font-medium" style="color: var(--color-landing-charcoal);"><%= item[:label] %></span>
+                  <span style="color: var(--color-landing-ink-muted);"><%= item[:level] %></span>
+                </div>
+                <div class="h-2 rounded-full" style="background: rgba(26,31,37,0.06);">
+                  <div class="h-2 rounded-full transition-all duration-700" style="width: <%= item[:pct] %>%; background: <%= item[:color] %>;"></div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <%# Feature 3: Expense tracking (text left, visual right) %>
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center" data-controller="scroll-reveal">
+        <div>
+          <div class="reveal-fade-up inline-flex items-center px-3 py-1 rounded-full text-xs font-bold mb-5"
+               data-reveal-delay="0"
+               style="background: rgba(99,102,241,0.1); color: #6366F1;">
+            Track
+          </div>
+          <h3 class="reveal-fade-up text-2xl md:text-3xl font-bold tracking-tight-landing mb-4"
+              data-reveal-delay="80"
+              style="color: var(--color-landing-charcoal);">
+            Track every expense as you go
+          </h3>
+          <p class="reveal-fade-up text-base md:text-lg leading-relaxed"
+             data-reveal-delay="160"
+             style="color: var(--color-landing-ink-muted);">
+            Log expenses on the fly. See where you stand against your budget at a glance. No surprises when you get home.
+          </p>
+        </div>
+        <div class="reveal-slide-left" data-reveal-delay="120">
+          <div class="rounded-2xl p-6" style="background: var(--color-landing-cream); border: 1px solid rgba(26,31,37,0.06);">
+            <div class="flex items-center justify-between mb-5">
+              <div class="text-sm font-bold" style="color: var(--color-landing-charcoal);">Lisbon expenses</div>
+              <div class="text-xs font-medium px-2.5 py-1 rounded-full"
+                   style="background: rgba(16,185,129,0.1); color: #10B981;">
+                Under budget
+              </div>
+            </div>
+            <% [
+              { desc: "Pastéis de Belém", cat: "Food", amount: "$4.50", time: "Today" },
+              { desc: "Museum pass", cat: "Activities", amount: "$18.00", time: "Today" },
+              { desc: "Tram 28 ticket", cat: "Transport", amount: "$3.60", time: "Yesterday" },
+              { desc: "Time Out Market", cat: "Food", amount: "$22.00", time: "Yesterday" },
+            ].each do |exp| %>
+              <div class="flex items-center justify-between py-3 border-b last:border-0" style="border-color: rgba(26,31,37,0.04);">
+                <div>
+                  <div class="text-sm font-medium" style="color: var(--color-landing-charcoal);"><%= exp[:desc] %></div>
+                  <div class="text-xs mt-0.5" style="color: var(--color-landing-ink-muted);"><%= exp[:cat] %> · <%= exp[:time] %></div>
+                </div>
+                <span class="text-sm font-bold font-mono" style="color: var(--color-landing-charcoal);"><%= exp[:amount] %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <%# Feature 4: City insights (visual left, text right) %>
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center" data-controller="scroll-reveal">
+        <div class="lg:order-2">
+          <div class="reveal-fade-up inline-flex items-center px-3 py-1 rounded-full text-xs font-bold mb-5"
+               data-reveal-delay="0"
+               style="background: rgba(236,72,153,0.1); color: #EC4899;">
+            Explore
+          </div>
+          <h3 class="reveal-fade-up text-2xl md:text-3xl font-bold tracking-tight-landing mb-4"
+              data-reveal-delay="80"
+              style="color: var(--color-landing-charcoal);">
+            Explore before you book
+          </h3>
+          <p class="reveal-fade-up text-base md:text-lg leading-relaxed"
+             data-reveal-delay="160"
+             style="color: var(--color-landing-ink-muted);">
+            Browse average costs for hundreds of destinations. Compare cities. Know exactly what to expect before you commit. Travel planning starts with knowledge.
+          </p>
+        </div>
+        <div class="lg:order-1 reveal-slide-right" data-reveal-delay="120">
+          <div class="grid grid-cols-2 gap-3">
+            <% [
+              { city: "Tokyo", country: "Japan", flag: "🇯🇵", meal: "$12", beer: "$5", color: "#0EA5A5" },
+              { city: "Paris", country: "France", flag: "🇫🇷", meal: "$18", beer: "$7", color: "#6366F1" },
+              { city: "Bangkok", country: "Thailand", flag: "🇹🇭", meal: "$3", beer: "$2", color: "#F59E0B" },
+              { city: "New York", country: "USA", flag: "🇺🇸", meal: "$20", beer: "$8", color: "#EC4899" },
+            ].each do |city| %>
+              <div class="rounded-xl p-4 border transition-all hover:shadow-lg"
+                   style="border-color: rgba(26,31,37,0.06); background: white;">
+                <div class="text-2xl mb-2"><%= city[:flag] %></div>
+                <div class="text-sm font-bold" style="color: var(--color-landing-charcoal);"><%= city[:city] %></div>
+                <div class="text-xs mb-3" style="color: var(--color-landing-ink-muted);"><%= city[:country] %></div>
+                <div class="space-y-1.5">
+                  <div class="flex justify-between text-xs">
+                    <span style="color: var(--color-landing-ink-muted);">Avg meal</span>
+                    <span class="font-bold font-mono" style="color: var(--color-landing-charcoal);"><%= city[:meal] %></span>
+                  </div>
+                  <div class="flex justify-between text-xs">
+                    <span style="color: var(--color-landing-ink-muted);">Beer</span>
+                    <span class="font-bold font-mono" style="color: var(--color-landing-charcoal);"><%= city[:beer] %></span>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,326 @@
+<%# Product Story Walkthrough — replaces "How it works", sticky text + crossfading visuals %>
+<section id="how-it-works" class="relative py-24 lg:py-32"
+         style="background: linear-gradient(180deg, var(--color-landing-cream) 0%, white 50%, var(--color-landing-cream) 100%);">
+  <div class="max-w-screen-xl mx-auto px-6">
+    <%# Section header %>
+    <div class="text-center mb-20" data-controller="scroll-reveal">
+      <span class="reveal-fade-up inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6"
+            data-reveal-delay="0"
+            style="background: rgba(245,166,35,0.1); color: var(--color-landing-saffron);">
+        How it works
+      </span>
+      <h2 class="reveal-fade-up landing-headline-secondary text-3xl md:text-4xl lg:text-5xl mb-5"
+          data-reveal-delay="80"
+          style="color: var(--color-landing-charcoal);">
+        From idea to budget in minutes.
+      </h2>
+      <p class="reveal-fade-up text-lg max-w-xl mx-auto"
+         data-reveal-delay="160"
+         style="color: var(--color-landing-ink-muted);">
+        Three steps. Real data. A travel budget you can actually trust.
+      </p>
+    </div>
+
+    <%# Steps: sticky left text + scrolling right visuals (desktop), stacked (mobile) %>
+    <div class="lg:grid lg:grid-cols-12 lg:gap-16">
+      <%# Steps text column %>
+      <div class="lg:col-span-5">
+        <div class="lg:sticky lg:top-32 space-y-16 lg:space-y-24">
+          <%# Step 1 %>
+          <div data-controller="scroll-reveal" class="group">
+            <div class="flex items-start gap-5">
+              <div class="reveal-fade-up flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-black"
+                   data-reveal-delay="0"
+                   style="background: var(--color-landing-saffron); color: var(--color-landing-charcoal);">
+                1
+              </div>
+              <div>
+                <h3 class="reveal-fade-up text-xl md:text-2xl font-bold mb-3 tracking-tight-landing"
+                    data-reveal-delay="80"
+                    style="color: var(--color-landing-charcoal);">
+                  Pick your destination
+                </h3>
+                <p class="reveal-fade-up text-base leading-relaxed"
+                   data-reveal-delay="160"
+                   style="color: var(--color-landing-ink-muted);">
+                  Choose from hundreds of cities worldwide. Each destination comes with real cost-of-living data — meals, lodging, transit, and more.
+                </p>
+              </div>
+            </div>
+            <%# Mobile-only visual %>
+            <div class="lg:hidden mt-8 reveal-fade-up" data-reveal-delay="240">
+              <div class="landing-browser-frame landing-shadow-lg">
+                <div class="landing-browser-chrome">
+                  <div class="landing-browser-dot" style="background: #FF5F57;"></div>
+                  <div class="landing-browser-dot" style="background: #FFBD2E;"></div>
+                  <div class="landing-browser-dot" style="background: #28CA41;"></div>
+                </div>
+                <div class="p-4 space-y-3" style="background: var(--color-landing-cream);">
+                  <div class="text-sm font-bold" style="color: var(--color-landing-charcoal);">Where are you headed?</div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <% [
+                      { city: "Lisbon", flag: "🇵🇹", color: "#F5A623" },
+                      { city: "Tokyo", flag: "🇯🇵", color: "#0EA5A5" },
+                      { city: "Mexico City", flag: "🇲🇽", color: "#6366F1" },
+                      { city: "Bali", flag: "🇮🇩", color: "#EC4899" },
+                    ].each do |dest| %>
+                      <div class="rounded-xl p-3 border text-center"
+                           style="border-color: rgba(26,31,37,0.06); background: white;">
+                        <div class="text-xl mb-1"><%= dest[:flag] %></div>
+                        <div class="text-xs font-bold" style="color: var(--color-landing-charcoal);"><%= dest[:city] %></div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <%# Step 2 %>
+          <div data-controller="scroll-reveal" class="group">
+            <div class="flex items-start gap-5">
+              <div class="reveal-fade-up flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-black"
+                   data-reveal-delay="0"
+                   style="background: var(--color-landing-teal); color: white;">
+                2
+              </div>
+              <div>
+                <h3 class="reveal-fade-up text-xl md:text-2xl font-bold mb-3 tracking-tight-landing"
+                    data-reveal-delay="80"
+                    style="color: var(--color-landing-charcoal);">
+                  Tune your travel style
+                </h3>
+                <p class="reveal-fade-up text-base leading-relaxed"
+                   data-reveal-delay="160"
+                   style="color: var(--color-landing-ink-muted);">
+                  Boutique hotel or hostel? Fine dining or street food? Customize preferences and watch your budget adjust in real time.
+                </p>
+              </div>
+            </div>
+            <%# Mobile-only visual %>
+            <div class="lg:hidden mt-8 reveal-fade-up" data-reveal-delay="240">
+              <div class="landing-browser-frame landing-shadow-lg">
+                <div class="landing-browser-chrome">
+                  <div class="landing-browser-dot" style="background: #FF5F57;"></div>
+                  <div class="landing-browser-dot" style="background: #FFBD2E;"></div>
+                  <div class="landing-browser-dot" style="background: #28CA41;"></div>
+                </div>
+                <div class="p-4 space-y-3" style="background: var(--color-landing-cream);">
+                  <div class="text-sm font-bold" style="color: var(--color-landing-charcoal);">Your travel style</div>
+                  <% [
+                    { label: "Accommodation", value: "Mid-range hotel", pct: 60 },
+                    { label: "Dining", value: "Mix of casual & nice", pct: 50 },
+                    { label: "Activities", value: "Active explorer", pct: 75 },
+                  ].each do |pref| %>
+                    <div>
+                      <div class="flex justify-between text-xs mb-1.5">
+                        <span class="font-medium" style="color: var(--color-landing-charcoal);"><%= pref[:label] %></span>
+                        <span style="color: var(--color-landing-ink-muted);"><%= pref[:value] %></span>
+                      </div>
+                      <div class="h-2 rounded-full" style="background: rgba(26,31,37,0.06);">
+                        <div class="h-2 rounded-full" style="width: <%= pref[:pct] %>%; background: var(--color-landing-teal);"></div>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <%# Step 3 %>
+          <div data-controller="scroll-reveal" class="group">
+            <div class="flex items-start gap-5">
+              <div class="reveal-fade-up flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-black"
+                   data-reveal-delay="0"
+                   style="background: var(--color-landing-charcoal); color: white;">
+                3
+              </div>
+              <div>
+                <h3 class="reveal-fade-up text-xl md:text-2xl font-bold mb-3 tracking-tight-landing"
+                    data-reveal-delay="80"
+                    style="color: var(--color-landing-charcoal);">
+                  Get your budget
+                </h3>
+                <p class="reveal-fade-up text-base leading-relaxed"
+                   data-reveal-delay="160"
+                   style="color: var(--color-landing-ink-muted);">
+                  Tripstein crunches the numbers using real-world cost data. You get a complete breakdown — per-person, by category, updated to current prices.
+                </p>
+              </div>
+            </div>
+            <%# Mobile-only visual %>
+            <div class="lg:hidden mt-8 reveal-fade-up" data-reveal-delay="240">
+              <div class="landing-browser-frame landing-shadow-lg">
+                <div class="landing-browser-chrome">
+                  <div class="landing-browser-dot" style="background: #FF5F57;"></div>
+                  <div class="landing-browser-dot" style="background: #FFBD2E;"></div>
+                  <div class="landing-browser-dot" style="background: #28CA41;"></div>
+                </div>
+                <div class="p-4" style="background: var(--color-landing-cream);">
+                  <div class="text-sm font-bold mb-3" style="color: var(--color-landing-charcoal);">Your budget is ready</div>
+                  <div class="rounded-xl p-4 mb-3"
+                       style="background: linear-gradient(135deg, var(--color-landing-saffron), #F7C948);">
+                    <div class="text-xs font-medium opacity-70">Total estimate</div>
+                    <div class="text-2xl font-black font-mono mt-0.5" style="color: var(--color-landing-charcoal);">$2,450</div>
+                  </div>
+                  <div class="grid grid-cols-3 gap-2 text-center">
+                    <% [
+                      { cat: "Lodging", amt: "$840" },
+                      { cat: "Food", amt: "$560" },
+                      { cat: "Fun", amt: "$630" },
+                    ].each do |item| %>
+                      <div class="rounded-lg p-2 border" style="border-color: rgba(26,31,37,0.06); background: white;">
+                        <div class="text-xs font-bold" style="color: var(--color-landing-charcoal);"><%= item[:amt] %></div>
+                        <div class="text-[10px] mt-0.5" style="color: var(--color-landing-ink-muted);"><%= item[:cat] %></div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%# Desktop-only visual column (sticky screenshots that crossfade) %>
+      <div class="hidden lg:block lg:col-span-7">
+        <div class="sticky top-24 space-y-24">
+          <%# Visual 1: City picker %>
+          <div data-controller="scroll-reveal">
+            <div class="reveal-scale-in landing-browser-frame landing-shadow-hero" data-reveal-delay="0">
+              <div class="landing-browser-chrome">
+                <div class="landing-browser-dot" style="background: #FF5F57;"></div>
+                <div class="landing-browser-dot" style="background: #FFBD2E;"></div>
+                <div class="landing-browser-dot" style="background: #28CA41;"></div>
+                <div class="flex-1 ml-4 h-7 rounded-lg flex items-center px-3 text-xs font-medium"
+                     style="background: rgba(26,31,37,0.04); color: var(--color-landing-ink-muted);">
+                  tripstein.app/trips/new
+                </div>
+              </div>
+              <div class="p-6 space-y-4" style="background: var(--color-landing-cream);">
+                <div class="text-lg font-bold" style="color: var(--color-landing-charcoal);">Where are you headed?</div>
+                <div class="grid grid-cols-4 gap-3">
+                  <% [
+                    { city: "Lisbon", country: "Portugal", flag: "🇵🇹", selected: true },
+                    { city: "Tokyo", country: "Japan", flag: "🇯🇵", selected: false },
+                    { city: "Mexico City", country: "Mexico", flag: "🇲🇽", selected: false },
+                    { city: "Bali", country: "Indonesia", flag: "🇮🇩", selected: false },
+                    { city: "Paris", country: "France", flag: "🇫🇷", selected: false },
+                    { city: "Barcelona", country: "Spain", flag: "🇪🇸", selected: false },
+                    { city: "Bangkok", country: "Thailand", flag: "🇹🇭", selected: false },
+                    { city: "New York", country: "USA", flag: "🇺🇸", selected: false },
+                  ].each do |dest| %>
+                    <div class="rounded-xl p-4 border-2 text-center transition-all cursor-pointer hover:border-opacity-100"
+                         style="border-color: <%= dest[:selected] ? 'var(--color-landing-saffron)' : 'rgba(26,31,37,0.06)' %>;
+                                background: <%= dest[:selected] ? 'rgba(245,166,35,0.06)' : 'white' %>;">
+                      <div class="text-2xl mb-2"><%= dest[:flag] %></div>
+                      <div class="text-xs font-bold" style="color: var(--color-landing-charcoal);"><%= dest[:city] %></div>
+                      <div class="text-[10px] mt-0.5" style="color: var(--color-landing-ink-muted);"><%= dest[:country] %></div>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="flex gap-3 mt-2">
+                  <div class="flex-1 h-11 rounded-xl flex items-center px-4 text-sm border"
+                       style="border-color: rgba(26,31,37,0.08); color: var(--color-landing-ink-muted); background: white;">
+                    Mar 15 – Mar 22, 2026
+                  </div>
+                  <div class="h-11 rounded-xl flex items-center px-4 text-sm font-medium border"
+                       style="border-color: rgba(26,31,37,0.08); color: var(--color-landing-charcoal); background: white;">
+                    2 travelers
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <%# Visual 2: Preferences %>
+          <div data-controller="scroll-reveal">
+            <div class="reveal-scale-in landing-browser-frame landing-shadow-hero" data-reveal-delay="0">
+              <div class="landing-browser-chrome">
+                <div class="landing-browser-dot" style="background: #FF5F57;"></div>
+                <div class="landing-browser-dot" style="background: #FFBD2E;"></div>
+                <div class="landing-browser-dot" style="background: #28CA41;"></div>
+                <div class="flex-1 ml-4 h-7 rounded-lg flex items-center px-3 text-xs font-medium"
+                     style="background: rgba(26,31,37,0.04); color: var(--color-landing-ink-muted);">
+                  tripstein.app/trips/lisbon/preferences
+                </div>
+              </div>
+              <div class="p-6 space-y-5" style="background: var(--color-landing-cream);">
+                <div class="flex items-center justify-between">
+                  <div class="text-lg font-bold" style="color: var(--color-landing-charcoal);">Tune your style</div>
+                  <div class="text-sm font-bold font-mono px-3 py-1 rounded-lg"
+                       style="background: rgba(245,166,35,0.1); color: var(--color-landing-saffron);">~$2,450</div>
+                </div>
+                <% [
+                  { label: "Accommodation", desc: "Mid-range hotel", pct: 60, color: "var(--color-landing-saffron)" },
+                  { label: "Dining style", desc: "Mix of casual & fancy", pct: 50, color: "var(--color-landing-teal)" },
+                  { label: "Activities", desc: "Active explorer", pct: 75, color: "#6366F1" },
+                  { label: "Nightlife", desc: "Moderate", pct: 45, color: "#EC4899" },
+                  { label: "Shopping", desc: "Light", pct: 25, color: "#8B5CF6" },
+                ].each do |pref| %>
+                  <div>
+                    <div class="flex justify-between mb-2">
+                      <span class="text-sm font-medium" style="color: var(--color-landing-charcoal);"><%= pref[:label] %></span>
+                      <span class="text-xs font-medium" style="color: var(--color-landing-ink-muted);"><%= pref[:desc] %></span>
+                    </div>
+                    <div class="h-2.5 rounded-full relative" style="background: rgba(26,31,37,0.06);">
+                      <div class="h-2.5 rounded-full" style="width: <%= pref[:pct] %>%; background: <%= pref[:color] %>;"></div>
+                      <div class="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 bg-white"
+                           style="left: calc(<%= pref[:pct] %>% - 8px); border-color: <%= pref[:color] %>;"></div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <%# Visual 3: Budget result %>
+          <div data-controller="scroll-reveal">
+            <div class="reveal-scale-in landing-browser-frame landing-shadow-hero" data-reveal-delay="0">
+              <div class="landing-browser-chrome">
+                <div class="landing-browser-dot" style="background: #FF5F57;"></div>
+                <div class="landing-browser-dot" style="background: #FFBD2E;"></div>
+                <div class="landing-browser-dot" style="background: #28CA41;"></div>
+                <div class="flex-1 ml-4 h-7 rounded-lg flex items-center px-3 text-xs font-medium"
+                     style="background: rgba(26,31,37,0.04); color: var(--color-landing-ink-muted);">
+                  tripstein.app/trips/lisbon
+                </div>
+              </div>
+              <div class="p-6" style="background: var(--color-landing-cream);">
+                <div class="rounded-xl p-5 mb-5"
+                     style="background: linear-gradient(135deg, var(--color-landing-saffron), #F7C948);">
+                  <div class="flex items-end justify-between">
+                    <div>
+                      <div class="text-xs font-medium opacity-70 uppercase tracking-wider" style="color: var(--color-landing-charcoal);">Your 7-night budget</div>
+                      <div class="text-4xl font-black font-mono tracking-tight mt-1" style="color: var(--color-landing-charcoal);">$2,450</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-xs opacity-70" style="color: var(--color-landing-charcoal);">Per person</div>
+                      <div class="text-xl font-bold font-mono" style="color: var(--color-landing-charcoal);">$1,225</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                  <% [
+                    { cat: "Lodging", amt: "$840", icon: "🏨", color: "#6366F1" },
+                    { cat: "Food", amt: "$560", icon: "🍽️", color: "#F59E0B" },
+                    { cat: "Activities", amt: "$350", icon: "🎭", color: "#0EA5A5" },
+                    { cat: "Nightlife", amt: "$280", icon: "🍷", color: "#EC4899" },
+                    { cat: "Shopping", amt: "$200", icon: "🛍️", color: "#8B5CF6" },
+                    { cat: "Other", amt: "$220", icon: "📌", color: "#6B7280" },
+                  ].each do |item| %>
+                    <div class="rounded-xl p-3 text-center border" style="border-color: rgba(26,31,37,0.06); background: white;">
+                      <div class="text-lg mb-1"><%= item[:icon] %></div>
+                      <div class="text-sm font-bold font-mono" style="color: var(--color-landing-charcoal);"><%= item[:amt] %></div>
+                      <div class="text-[10px] mt-0.5" style="color: var(--color-landing-ink-muted);"><%= item[:cat] %></div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

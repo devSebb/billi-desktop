@@ -5,11 +5,11 @@
   <div class="flex justify-between items-center mb-8">
     <div class="relative inline-block text-left">
       <%= form_with url: friends_path, method: :get, class: "flex items-center gap-4" do |f| %>
-        <label class="text-sm font-medium text-gray-500">Trip:</label>
+        <label class="text-sm font-medium text-muted">Trip:</label>
         <% if @trips.any? %>
-          <%= f.select :trip_id, options_from_collection_for_select(@trips, :id, :name, @selected_trip&.id), {}, onchange: "this.form.submit()", class: "rounded-xl border-gray-200 py-2 pl-4 pr-10 text-brand-charcoal font-medium focus:ring-brand-teal focus:border-brand-teal" %>
+          <%= f.select :trip_id, options_from_collection_for_select(@trips, :id, :name, @selected_trip&.id), {}, onchange: "this.form.submit()", class: "input w-auto min-w-[200px] py-2.5" %>
         <% else %>
-          <span class="text-gray-400">No trips available</span>
+          <span class="text-muted">No trips available</span>
         <% end %>
       <% end %>
     </div>
@@ -20,19 +20,19 @@
       
       <!-- Balances -->
       <div class="space-y-6">
-        <h3 class="text-xl font-bold text-brand-charcoal">Balances</h3>
-        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <h3 class="section-title">Balances</h3>
+        <div class="card p-0 overflow-hidden">
            <% if @balances.present? %>
              <div class="divide-y divide-gray-100">
                <% @balances.each do |b| %>
                  <div class="p-6 flex items-center justify-between">
                    <div class="flex items-center gap-4">
-                      <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-500">
+                      <div class="w-10 h-10 rounded-full bg-billi-bg-muted dark:bg-gray-700 flex items-center justify-center font-bold text-muted">
                         <%= b[:participant].name&.first&.upcase || "?" %>
                       </div>
                       <div>
-                        <div class="font-bold text-brand-charcoal"><%= b[:participant].name %></div>
-                        <div class="text-xs text-gray-400">Paid <%= number_to_currency(b[:paid]) %></div>
+                        <div class="font-bold text-primary"><%= b[:participant].name %></div>
+                        <div class="text-xs text-muted">Paid <%= number_to_currency(b[:paid]) %></div>
                       </div>
                    </div>
                    
@@ -44,14 +44,14 @@
                        <div class="text-red-500 font-bold"><%= number_to_currency(b[:balance]) %></div>
                        <div class="text-xs text-red-600/70">owes</div>
                      <% else %>
-                       <div class="text-gray-400 font-bold">Settled</div>
+                       <div class="text-muted font-bold">Settled</div>
                      <% end %>
                    </div>
                  </div>
                <% end %>
              </div>
            <% else %>
-             <div class="p-8 text-center text-gray-400">
+             <div class="p-8 text-center text-muted">
                No participants or expenses yet.
              </div>
            <% end %>
@@ -60,15 +60,15 @@
 
       <!-- Settlement -->
       <div class="space-y-6">
-        <h3 class="text-xl font-bold text-brand-charcoal">Settlement Plan</h3>
-        <div class="bg-brand-charcoal rounded-2xl shadow-sm p-6 text-white">
+        <h3 class="section-title">Settlement Plan</h3>
+        <div class="card bg-brand-charcoal dark:bg-billi-surface-dark border-0 text-billi-cream p-6">
            <% if @settlements.present? %>
              <div class="space-y-4">
                <% @settlements.each do |s| %>
                  <div class="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10">
                     <div class="flex items-center gap-2">
                       <span class="font-bold"><%= s[:from] %></span>
-                      <span class="text-gray-400 text-sm">pays</span>
+                      <span class="text-billi-cream-muted text-sm">pays</span>
                       <span class="font-bold"><%= s[:to] %></span>
                     </div>
                     <div class="font-bold text-brand-yellow">
@@ -81,7 +81,7 @@
                <button class="text-sm text-brand-teal hover:text-white transition-colors font-medium">Copy summary</button>
              </div>
            <% else %>
-             <div class="text-center py-12 text-gray-500">
+             <div class="text-center py-12 text-muted">
                Nothing to settle. Everyone is all square!
              </div>
            <% end %>
@@ -90,7 +90,7 @@
       
     </div>
   <% else %>
-    <div class="text-center py-24 text-gray-500">
+    <div class="text-center py-24 text-muted">
       Please select a trip.
     </div>
   <% end %>

@@ -1,0 +1,51 @@
+<%# Trust Bar — fast credibility, animated counters %>
+<section class="relative py-16 border-y"
+         style="background-color: white; border-color: rgba(26,31,37,0.04);"
+         data-controller="scroll-reveal">
+  <div class="max-w-screen-xl mx-auto px-6">
+    <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 text-center">
+      <%# Stat: Cities %>
+      <div class="reveal-fade-up" data-reveal-delay="0">
+        <div class="text-3xl md:text-4xl font-black tracking-tight-landing" style="color: var(--color-landing-charcoal);">
+          <span data-controller="counter"
+                data-counter-target-value="<%= @city_count > 0 ? @city_count : 200 %>"
+                data-counter-suffix-value="+">0</span>
+        </div>
+        <div class="text-sm font-medium mt-1" style="color: var(--color-landing-ink-muted);">Cities with real data</div>
+      </div>
+
+      <%# Divider %>
+      <div class="hidden md:block w-px h-12" style="background: rgba(26,31,37,0.1);"></div>
+
+      <%# Stat: Cost categories %>
+      <div class="reveal-fade-up" data-reveal-delay="80">
+        <div class="text-3xl md:text-4xl font-black tracking-tight-landing" style="color: var(--color-landing-charcoal);">
+          <span data-controller="counter" data-counter-target-value="9" data-counter-suffix-value="">0</span>
+        </div>
+        <div class="text-sm font-medium mt-1" style="color: var(--color-landing-ink-muted);">Cost categories tracked</div>
+      </div>
+
+      <%# Divider %>
+      <div class="hidden md:block w-px h-12" style="background: rgba(26,31,37,0.1);"></div>
+
+      <%# Stat: Free %>
+      <div class="reveal-fade-up" data-reveal-delay="160">
+        <div class="text-3xl md:text-4xl font-black tracking-tight-landing" style="color: var(--color-landing-saffron);">
+          Free
+        </div>
+        <div class="text-sm font-medium mt-1" style="color: var(--color-landing-ink-muted);">No credit card required</div>
+      </div>
+
+      <%# Divider %>
+      <div class="hidden md:block w-px h-12" style="background: rgba(26,31,37,0.1);"></div>
+
+      <%# Stat: Built for %>
+      <div class="reveal-fade-up" data-reveal-delay="240">
+        <div class="text-3xl md:text-4xl font-black tracking-tight-landing" style="color: var(--color-landing-charcoal);">
+          Solo &amp; groups
+        </div>
+        <div class="text-sm font-medium mt-1" style="color: var(--color-landing-ink-muted);">Built for every travel style</div>
+      </div>
+    </div>
+  </div>
+</section>

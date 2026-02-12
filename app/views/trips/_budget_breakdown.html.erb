@@ -1,34 +1,48 @@
+<% city = City.find_by(name: trip.destination_city) %>
+<% snapshot = city&.price_snapshots&.recent&.first %>
+<% is_estimated = snapshot&.source.in?(["estimated", "mock_generator"]) %>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-  <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-sm">
-    <p class="text-indigo-100 text-sm font-medium uppercase tracking-wider">Total Trip Cost</p>
-    <p class="text-4xl font-bold mt-1"><%= number_to_currency(budget&.total_trip_cost || 0) %></p>
-    <p class="mt-2 text-indigo-200 text-sm">For <%= pluralize(trip.travelers_count, 'person') %>, <%= (trip.end_date - trip.start_date).to_i %> nights</p>
+  <div class="bg-brand-charcoal dark:bg-gray-800 text-white p-6 rounded-xl shadow-sm">
+    <p class="caption text-white/80 flex items-center gap-2">
+      Total Trip Cost
+      <% if is_estimated %><span class="badge badge--accent normal-case font-semibold">Estimated</span><% end %>
+    </p>
+    <p class="text-4xl font-bold mt-1"><%= format_in_display_currency(budget&.total_trip_cost || 0, trip.currency) %></p>
+    <p class="mt-2 text-white/70 text-sm">For <%= pluralize(trip.travelers_count, 'person') %>, <%= (trip.end_date - trip.start_date).to_i %> nights</p>
   </div>
-  
-  <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-    <p class="text-gray-500 text-sm font-medium uppercase tracking-wider">Cost Per Person</p>
-    <p class="text-4xl font-bold text-gray-900 mt-1"><%= number_to_currency(budget&.per_person_cost || 0) %></p>
+
+  <div class="card">
+    <p class="caption text-muted">Cost Per Person</p>
+    <p class="text-4xl font-bold text-primary mt-1"><%= format_in_display_currency(budget&.per_person_cost || 0, trip.currency) %></p>
   </div>
 </div>
 
-<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-  <% [[:lodging_total, "Lodging"], [:restaurants_total, "Food"], [:activities_total, "Activities"], [:drinks_total, "Nightlife"], [:shopping_total, "Shopping"], [:other_total, "Other"]].each do |field, label| %>
-    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-      <p class="text-gray-500 text-xs font-medium uppercase"><%= label %></p>
-      <p class="text-xl font-bold text-gray-900 mt-1"><%= number_to_currency(budget&.send(field) || 0) %></p>
+<% total = (budget&.total_trip_cost || 0).to_f %>
+<% total = 1 if total <= 0 %>
+<div class="mt-6 space-y-3">
+  <p class="caption">Category breakdown</p>
+  <% [[:lodging_total, "Lodging", "bg-blue-500"], [:restaurants_total, "Food", "bg-orange-500"], [:activities_total, "Activities", "bg-purple-500"], [:drinks_total, "Nightlife", "bg-pink-500"], [:shopping_total, "Shopping", "bg-brand-yellow"], [:other_total, "Other", "bg-gray-500"]].each do |field, label, bar_color| %>
+    <% amount = (budget&.send(field) || 0).to_f %>
+    <% pct = total > 0 ? (amount / total * 100).round(0) : 0 %>
+    <div class="flex items-center gap-3">
+      <span class="text-sm font-medium text-primary w-24"><%= label %></span>
+      <div class="flex-1 h-3 bg-billi-bg-muted dark:bg-gray-700 rounded-full overflow-hidden">
+        <div class="h-full <%= bar_color %> rounded-full transition-all" style="width: <%= [pct, 100].min %>%"></div>
+      </div>
+      <span class="text-sm font-bold text-primary w-20 text-right"><%= format_in_display_currency(amount, trip.currency) %></span>
     </div>
   <% end %>
 </div>
 
 <% if budget %>
-  <div class="mt-6 bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl border border-indigo-100">
-    <h3 class="flex items-center gap-2 text-indigo-800 font-bold mb-2">
+  <div class="mt-8 p-6 rounded-xl border border-brand-teal/20 dark:border-brand-teal/30 bg-brand-teal/5 dark:bg-brand-teal/10">
+    <h3 class="card-title flex items-center gap-2 text-brand-teal mb-2">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
       </svg>
       AI Budget Analysis
     </h3>
-    <p class="text-indigo-900 text-sm leading-relaxed">
+    <p class="text-sm leading-relaxed text-primary">
       <%= AiBudgetExplainer.explain(trip, budget) %>
     </p>
   </div>

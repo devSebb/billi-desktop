@@ -6,4 +6,5 @@ class User < ApplicationRecord
 
   has_many :trips, dependent: :destroy
   has_many :trip_participants, dependent: :nullify
+  has_one_attached :avatar
 end

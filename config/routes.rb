@@ -14,6 +14,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :cities, only: [:show], param: :slug
+
   # Global Nav items
   get 'ledger', to: 'expenses#index', as: :ledger
   get 'friends', to: 'friends#index', as: :friends

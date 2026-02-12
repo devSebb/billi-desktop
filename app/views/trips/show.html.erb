@@ -2,52 +2,49 @@
 
 <div class="max-w-6xl mx-auto">
   <!-- Trip Header -->
-  <div class="bg-white rounded-2xl shadow-sm p-8 mb-8 relative overflow-hidden">
-     <div class="absolute top-0 right-0 w-64 h-64 bg-brand-yellow/10 rounded-bl-full -mr-16 -mt-16"></div>
-     
+  <div class="card p-8 mb-8 relative overflow-hidden">
+     <div class="absolute top-0 right-0 w-64 h-64 bg-brand-yellow/10 dark:bg-brand-yellow/20 rounded-bl-full -mr-16 -mt-16"></div>
      <div class="relative z-10 flex justify-between items-start">
         <div>
            <div class="flex items-center gap-3 mb-2">
-              <h1 class="text-3xl font-bold text-brand-charcoal"><%= @trip.destination_city %></h1>
-              <span class="px-3 py-1 rounded-full bg-gray-100 text-xs font-medium text-gray-600 uppercase tracking-wide"><%= @trip.status %></span>
+              <h1 class="text-3xl font-bold text-primary"><%= @trip.destination_city %></h1>
+              <span class="badge badge--muted uppercase"><%= @trip.status %></span>
            </div>
-           <p class="text-gray-500 flex items-center gap-2 mb-6">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+           <p class="text-muted flex items-center gap-2 mb-6">
+              <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
               <%= @trip.start_date.strftime("%b %d") %> - <%= @trip.end_date.strftime("%b %d, %Y") %>
-              <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+              <span class="w-1 h-1 rounded-full bg-billi-ink/30 dark:bg-billi-cream/30"></span>
               <%= @trip.duration_nights %> nights
-              <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+              <span class="w-1 h-1 rounded-full bg-billi-ink/30 dark:bg-billi-cream/30"></span>
               <%= @trip.travelers_count %> Travelers
            </p>
-           
            <div class="flex gap-3">
-             <%= link_to "Edit Trip", edit_trip_path(@trip), class: "btn-secondary text-sm py-2 px-4" %>
-             <%= button_to "Recalculate Budget", generate_budget_trip_path(@trip), class: "btn-secondary text-sm py-2 px-4" %>
+             <%= link_to "Edit Trip", edit_trip_path(@trip), class: "btn-secondary btn-sm" %>
+             <%= button_to "Recalculate Budget", generate_budget_trip_path(@trip), class: "btn-secondary btn-sm cursor-pointer" %>
            </div>
         </div>
-        
         <div class="text-right">
-           <p class="text-sm text-gray-500 uppercase tracking-wide mb-1">Estimated Total</p>
-           <p class="text-4xl font-bold text-brand-charcoal tracking-tight">
-             <%= number_to_currency(@trip.trip_budget&.total_trip_cost || 0, precision: 0) %>
+           <p class="caption mb-1">Estimated Total</p>
+           <p class="text-4xl font-bold text-brand-charcoal dark:text-gray-100 tracking-tight">
+             <%= format_in_display_currency(@trip.trip_budget&.total_trip_cost || 0, @trip.currency) %>
            </p>
-           <p class="text-sm text-gray-400 mt-1">
-             <%= number_to_currency(@trip.trip_budget&.per_person_cost || 0, precision: 0) %> / person
+           <p class="text-sm text-muted mt-1">
+             <%= format_in_display_currency(@trip.trip_budget&.per_person_cost || 0, @trip.currency) %> / person
            </p>
         </div>
      </div>
   </div>
 
   <!-- Tabs -->
-  <div class="flex items-center gap-1 mb-8 border-b border-gray-200">
+  <nav class="tabs">
      <% tab = params[:tab] || 'overview' %>
-     <%= link_to "Overview", trip_path(@trip, tab: 'overview'), class: "px-6 py-3 font-medium text-sm border-b-2 transition-colors #{tab == 'overview' ? 'border-brand-yellow text-brand-charcoal' : 'border-transparent text-gray-500 hover:text-brand-charcoal'}" %>
-     <%= link_to "Budget & Preferences", trip_path(@trip, tab: 'budget'), class: "px-6 py-3 font-medium text-sm border-b-2 transition-colors #{tab == 'budget' ? 'border-brand-yellow text-brand-charcoal' : 'border-transparent text-gray-500 hover:text-brand-charcoal'}" %>
-     <%= link_to "Collaborators", trip_path(@trip, tab: 'collaborators'), class: "px-6 py-3 font-medium text-sm border-b-2 transition-colors #{tab == 'collaborators' ? 'border-brand-yellow text-brand-charcoal' : 'border-transparent text-gray-500 hover:text-brand-charcoal'}" %>
-  </div>
+     <%= link_to "Overview", trip_path(@trip, tab: 'overview'), class: "tabs__item #{tab == 'overview' ? 'tabs__item--active' : ''}" %>
+     <%= link_to "Budget & Preferences", trip_path(@trip, tab: 'budget'), class: "tabs__item #{tab == 'budget' ? 'tabs__item--active' : ''}" %>
+     <%= link_to "Collaborators", trip_path(@trip, tab: 'collaborators'), class: "tabs__item #{tab == 'collaborators' ? 'tabs__item--active' : ''}" %>
+  </nav>
 
   <!-- Content -->
-  <div>
+  <div class="section-gap">
     <% case tab %>
     <% when 'budget' %>
       <%= render 'budget_tab', trip: @trip, preference: @preference, budget: @budget %>

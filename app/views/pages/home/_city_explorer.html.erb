@@ -1,0 +1,140 @@
+<%# City Explorer — the showstopper. Horizontal scroll strip with Unsplash images + real cost data %>
+<section id="cities" class="relative py-24 lg:py-32"
+         style="background: var(--color-landing-cream);">
+  <div class="max-w-screen-xl mx-auto px-6">
+    <%# Section header %>
+    <div class="text-center mb-16" data-controller="scroll-reveal">
+      <span class="reveal-fade-up inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6"
+            data-reveal-delay="0"
+            style="background: rgba(245,166,35,0.1); color: var(--color-landing-saffron);">
+        Destinations
+      </span>
+      <h2 class="reveal-fade-up landing-headline-secondary text-3xl md:text-4xl lg:text-5xl mb-5"
+          data-reveal-delay="80"
+          style="color: var(--color-landing-charcoal);">
+        Explore real costs, worldwide.
+      </h2>
+      <p class="reveal-fade-up text-lg max-w-xl mx-auto"
+         data-reveal-delay="160"
+         style="color: var(--color-landing-ink-muted);">
+        Browse average prices for hundreds of cities. Know what to expect before you go.
+      </p>
+    </div>
+  </div>
+
+  <%# Horizontal scroll strip (full-width, overflows container) %>
+  <div class="relative" data-controller="scroll-reveal">
+    <%# Gradient fades for scroll affordance %>
+    <div class="landing-scroll-fade-left"></div>
+    <div class="landing-scroll-fade-right"></div>
+
+    <div class="reveal-fade-in overflow-x-auto pb-6 -mb-6 px-6 cursor-grab landing-hide-scrollbar"
+         data-controller="drag-scroll"
+         data-reveal-delay="0"
+         style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;"
+         >
+      <div class="flex gap-5 w-max py-2 pl-[max(1.5rem,calc((100vw-1280px)/2+1.5rem))]">
+        <% if @featured_snapshots.present? %>
+          <% @featured_snapshots.each do |snapshot| %>
+            <% city = snapshot.city %>
+            <% city_img = city_image_url(city) %>
+            <% rows = CityCostPresenter.rows_for_card(snapshot) %>
+            <% is_real = snapshot.source == "traveltables" %>
+
+            <div class="landing-city-card" style="scroll-snap-align: center;">
+              <%# City image %>
+              <div class="relative h-44 overflow-hidden"
+                   style="background: linear-gradient(135deg, var(--color-landing-saffron), var(--color-landing-teal));">
+                <% if city_img %>
+                  <img src="<%= city_img %>"
+                       alt="<%= city.name %>"
+                       loading="lazy"
+                       class="w-full h-full object-cover"
+                       style="aspect-ratio: 320/176;">
+                <% else %>
+                  <div class="w-full h-full flex items-center justify-center text-5xl opacity-50">
+                    🌍
+                  </div>
+                <% end %>
+                <%# Badge overlay %>
+                <div class="absolute top-3 right-3">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-sm"
+                        style="background: rgba(255,255,255,0.85); color: <%= is_real ? 'var(--color-landing-teal)' : 'var(--color-landing-ink-muted)' %>;">
+                    <%= is_real ? "Real data" : "Estimated" %>
+                  </span>
+                </div>
+              </div>
+
+              <%# Card content %>
+              <div class="p-5 space-y-3">
+                <div>
+                  <h3 class="text-base font-bold" style="color: var(--color-landing-charcoal);"><%= city.name %></h3>
+                  <p class="text-xs" style="color: var(--color-landing-ink-muted);"><%= city.country %></p>
+                </div>
+
+                <% if rows.any? %>
+                  <div class="space-y-2">
+                    <% rows.first(4).each do |row| %>
+                      <div class="flex items-center justify-between text-xs">
+                        <span style="color: var(--color-landing-ink-muted);"><%= row[:label] %></span>
+                        <span class="font-bold font-mono" style="color: var(--color-landing-charcoal);">
+                          $<%= number_with_precision(row[:amount], precision: row[:amount] < 10 ? 2 : 0) %>
+                        </span>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <%= link_to new_user_registration_path,
+                    class: "block text-center text-xs font-bold py-2.5 rounded-xl mt-3 transition-all duration-200 hover:opacity-80",
+                    style: "background: var(--color-landing-charcoal); color: var(--color-landing-saffron);" do %>
+                  Plan a trip &rarr;
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <%# Fallback when no snapshot data %>
+          <% [
+            { name: "Lisbon", country: "Portugal", flag: "🇵🇹", meal: "$8.50", beer: "$3.20" },
+            { name: "Tokyo", country: "Japan", flag: "🇯🇵", meal: "$12.00", beer: "$5.00" },
+            { name: "Mexico City", country: "Mexico", flag: "🇲🇽", meal: "$5.00", beer: "$2.50" },
+            { name: "Bali", country: "Indonesia", flag: "🇮🇩", meal: "$4.00", beer: "$2.00" },
+            { name: "Paris", country: "France", flag: "🇫🇷", meal: "$18.00", beer: "$7.00" },
+            { name: "Barcelona", country: "Spain", flag: "🇪🇸", meal: "$14.00", beer: "$4.50" },
+            { name: "Bangkok", country: "Thailand", flag: "🇹🇭", meal: "$3.00", beer: "$2.00" },
+            { name: "New York", country: "USA", flag: "🇺🇸", meal: "$20.00", beer: "$8.00" },
+          ].each do |city| %>
+            <div class="landing-city-card" style="scroll-snap-align: center;">
+              <div class="h-44 flex items-center justify-center text-5xl"
+                   style="background: linear-gradient(135deg, var(--color-landing-saffron), var(--color-landing-teal));">
+                <%= city[:flag] %>
+              </div>
+              <div class="p-5 space-y-3">
+                <div>
+                  <h3 class="text-base font-bold" style="color: var(--color-landing-charcoal);"><%= city[:name] %></h3>
+                  <p class="text-xs" style="color: var(--color-landing-ink-muted);"><%= city[:country] %></p>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-xs">
+                    <span style="color: var(--color-landing-ink-muted);">Avg meal</span>
+                    <span class="font-bold font-mono" style="color: var(--color-landing-charcoal);"><%= city[:meal] %></span>
+                  </div>
+                  <div class="flex items-center justify-between text-xs">
+                    <span style="color: var(--color-landing-ink-muted);">Beer</span>
+                    <span class="font-bold font-mono" style="color: var(--color-landing-charcoal);"><%= city[:beer] %></span>
+                  </div>
+                </div>
+                <%= link_to new_user_registration_path,
+                    class: "block text-center text-xs font-bold py-2.5 rounded-xl mt-3 transition-all duration-200 hover:opacity-80",
+                    style: "background: var(--color-landing-charcoal); color: var(--color-landing-saffron);" do %>
+                  Plan a trip &rarr;
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,8 +1,8 @@
 <div class="flex items-center justify-between">
   <div class="flex items-center gap-3">
-    <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-lg"><%= icon %></div>
-    <span class="text-gray-600 font-medium"><%= label %></span>
+    <div class="w-8 h-8 rounded-lg bg-billi-bg dark:bg-billi-bg-muted flex items-center justify-center text-lg"><%= icon %></div>
+    <span class="text-muted font-medium"><%= label %></span>
   </div>
-  <span class="font-medium text-brand-charcoal"><%= number_to_currency(amount, precision: 0) %></span>
+  <span class="font-medium text-primary"><%= local_assigns[:trip] ? format_in_display_currency(amount, trip.currency) : number_to_currency(amount, precision: 0) %></span>
 </div>
 
