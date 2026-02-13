@@ -29,7 +29,7 @@
               <span><%= row[:label] %></span>
             </div>
             <span class="font-medium text-primary">
-              <%= number_to_currency(row[:amount], unit: currency == "USD" ? "$" : "#{currency} ", precision: 0) %>
+              <%= format_in_display_currency(row[:amount], currency) %>
             </span>
           </div>
         <% end %>

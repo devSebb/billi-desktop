@@ -18,6 +18,8 @@ Rails.application.routes.draw do
 
   resources :cities, only: [:show], param: :slug
 
+  patch "display_currency", to: "display_currency#update", as: :update_display_currency
+
   # Global Nav items
   get 'ledger', to: 'expenses#index', as: :ledger
   get 'friends', to: 'friends#index', as: :friends

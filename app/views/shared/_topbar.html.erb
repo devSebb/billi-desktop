@@ -14,6 +14,16 @@
       <input type="text" class="input block w-64 pl-10 py-2.5" placeholder="Search trips...">
     </div>
 
+    <!-- Currency selector (logged-in only) -->
+    <% if user_signed_in? %>
+      <%= form_with url: update_display_currency_path, method: :patch, local: true, class: "inline" do |f| %>
+        <%= f.select :display_currency,
+            [["$ USD", "USD"], ["€ EUR", "EUR"], ["£ GBP", "GBP"], ["R$ BRL", "BRL"], ["CHF", "CHF"]],
+            { selected: current_user.display_currency || "USD" },
+            { class: "input py-1.5 text-sm w-24", onchange: "this.form.submit()" } %>
+      <% end %>
+    <% end %>
+
     <!-- Actions -->
     <div class="flex items-center gap-2" data-controller="theme">
       <button type="button" data-action="click->theme#toggle" class="btn-icon" aria-label="Toggle dark mode">

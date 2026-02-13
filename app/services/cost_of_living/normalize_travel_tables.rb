@@ -66,9 +66,16 @@ module CostOfLiving
           next
         end
 
-        # API returns avg / min / max; also support average_price, avg_price, price
-        val = item["average_price"] || item["avg_price"] || item["price"] || item["avg"]
-        
+        # Prefer USD value from API (pre-converted); fallback to local currency
+        usd_avg = item.dig("usd", "avg")
+        val = if usd_avg.present?
+                usd_avg.to_s.gsub(/[^\d.]/, "").to_f
+              else
+                raw = item["average_price"] || item["avg_price"] || item["price"] || item["avg"]
+                Rails.logger.debug { "[NormalizeTravelTables] Missing usd.avg for '#{item["item_name"]}', falling back to local value" }
+                raw
+              end
+
         if val
           val = val.to_f
           

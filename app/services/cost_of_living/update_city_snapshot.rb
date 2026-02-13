@@ -36,9 +36,8 @@ module CostOfLiving
         raise "Normalized data is empty"
       end
 
-      # Use currency from API, or first price's currency_code, or default
-      prices = json["prices"] || json.dig("data", "prices") || []
-      currency = json["currency"].presence || prices.dig(0, "currency_code").presence || "USD" 
+      # All ingested data is now stored in USD (using API's usd.avg values)
+      currency = "USD"
 
       snapshot = @city.price_snapshots.create!(
         source: "traveltables",

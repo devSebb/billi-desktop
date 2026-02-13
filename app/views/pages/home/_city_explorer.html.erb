@@ -78,7 +78,7 @@
                       <div class="flex items-center justify-between text-xs">
                         <span style="color: var(--color-landing-ink-muted);"><%= row[:label] %></span>
                         <span class="font-bold font-mono" style="color: var(--color-landing-charcoal);">
-                          $<%= number_with_precision(row[:amount], precision: row[:amount] < 10 ? 2 : 0) %>
+                          <%= format_in_display_currency(row[:amount], "USD") %>
                         </span>
                       </div>
                     <% end %>

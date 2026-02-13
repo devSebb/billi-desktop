@@ -1,24 +1,25 @@
 module ApplicationHelper
-  # Display amount in user's display currency when possible. trip_currency is the source (e.g. trip.currency).
-  # Falls back to trip currency if no rate or no current_user.
-  def format_in_display_currency(amount, trip_currency = "USD")
-    return number_to_currency(0) if amount.nil?
-    return number_to_currency(amount) unless current_user&.display_currency.present?
+  # Display amount in user's display currency when possible. source_currency is the stored currency (now always USD).
+  # Defaults to USD display when no user preference.
+  def format_in_display_currency(amount, source_currency = "USD")
+    return number_to_currency(0, unit: "$") if amount.nil?
 
-    display_currency = current_user.display_currency
-    trip_currency = (trip_currency || "USD").to_s.upcase
-    return number_to_currency(amount) if display_currency.upcase == trip_currency
+    display_currency = current_user&.display_currency.presence || "USD"
+    source_currency = (source_currency || "USD").to_s.upcase
+    display_currency = display_currency.to_s.upcase
 
-    converted = FxRates.convert(amount, trip_currency, display_currency)
+    return number_to_currency(amount, unit: currency_symbol(display_currency)) if display_currency == source_currency
+
+    converted = FxRates.convert(amount, source_currency, display_currency)
     if converted
       number_to_currency(converted, unit: currency_symbol(display_currency))
     else
-      number_to_currency(amount) + " (#{trip_currency})"
+      number_to_currency(amount, unit: currency_symbol(source_currency)) + " (#{source_currency})"
     end
   end
 
   def currency_symbol(code)
-    { "USD" => "$", "EUR" => "€", "GBP" => "£", "BRL" => "R$" }.fetch(code.to_s.upcase, code.to_s + " ")
+    { "USD" => "$", "EUR" => "€", "GBP" => "£", "BRL" => "R$", "CHF" => "CHF " }.fetch(code.to_s.upcase, code.to_s + " ")
   end
 
   # Returns Unsplash image URL for a city (same source as trip cards). Cached per city to avoid API hammering.

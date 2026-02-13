@@ -14,7 +14,7 @@ The app always uses the **most recent** snapshot per city (see `CitySnapshotPick
 - **Service:** `CostOfLiving::UpdateCitySnapshot` calls the TravelTables API (RapidAPI) for a city and creates one `PriceSnapshot` + items.
 - **Rake tasks:** `lib/tasks/cost_of_living.rake`:
   - **`cost_of_living:preload_initial_snapshots`** – only cities that have **no** snapshots (max 10 per run, 1s delay, stops on 429).
-  - **`cost_of_living:refresh_snapshots`** – can refresh **all** cities (or a limit) to get the latest API data; same rate-limit handling.
+  - **`cost_of_living:refresh_snapshots`** – can refresh **all** cities (or a limit) to get the latest API data; same rate-limit handling. **Round-robin:** each run continues from the last-processed city (cursor in Redis/cache), then wraps to the first city after the last; so you don’t always hit the same city and rate limits spread across the list.
 
 So: **populating or refreshing city info in production = running one of these rake tasks against the production app**, not a build or pre-build command.
 
@@ -45,10 +45,24 @@ So: **populating or refreshing city info in production = running one of these ra
    ```bash   LIMIT=5 bundle exec rails cost_of_living:refresh_snapshots
    ```
 
+## After deploying USD ingest changes
+
+After deploying the USD ingest update (which stores `usd.avg` from the API instead of local currency), existing snapshots will still have local-currency values. Run the refresh task to re-fetch all cities with USD data:
+
+```bash
+bundle exec rails cost_of_living:refresh_snapshots
+```
+
+Until refreshed, old snapshots will display their original local-currency amounts labeled as USD — so refreshing promptly is recommended.
+
 ## Not a build command
 
 - Populating/refreshing city data is **not** part of the app **build** (no pre-build or post-build step in the codebase).
 - It’s a **runtime** operation: run the rake task when you need to fill or update data (manually, cron, or a release script if you add one).
+
+## Round-robin and cursor
+
+Both tasks store a **cursor** in `Rails.cache` (key `cost_of_living/refresh_cursor`) so the next run continues from the next city (by `created_at`), then wraps to the start. That way you don’t always start with the same city and hit rate limits on city #5 every time. **Production must use a persistent cache (e.g. Redis)** for the cursor to persist across runs; with the default in-memory cache (e.g. in dev), each new process has no cursor so the first city is used every time.
 
 ## Optional: run on deploy (e.g. Render)
 

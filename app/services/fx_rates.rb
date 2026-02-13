@@ -8,7 +8,8 @@ class FxRates
     "USD" => 1.0,
     "EUR" => 0.92,
     "GBP" => 0.79,
-    "BRL" => 5.0
+    "BRL" => 5.0,
+    "CHF" => 0.88
   }.freeze
 
   def self.get_rate(from_currency, to_currency)

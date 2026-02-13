@@ -20,12 +20,12 @@ class CitiesController < ApplicationController
   end
 
   def currency_label_for(snapshot)
-    return "Local currency (#{snapshot.currency})" unless current_user&.display_currency.present?
+    display_currency = current_user&.display_currency.presence || "USD"
 
-    if current_user.display_currency.upcase == (snapshot.currency || "USD").to_s.upcase
-      "Local currency (#{snapshot.currency})"
+    if display_currency.upcase == (snapshot.currency || "USD").to_s.upcase
+      "Prices in #{display_currency.upcase}"
     else
-      "Converted to #{current_user.display_currency}"
+      "Converted to #{display_currency.upcase}"
     end
   end
 end
