@@ -51,6 +51,7 @@ Billi is a production-ready MVP for travel budget planning. It helps users estim
    ```bash
    rails cost_of_living:preload_initial_snapshots
    ```
+   For **production** (where city info is empty or you want latest data), see [Cost of Living in Production](docs/COST_OF_LIVING_PRODUCTION.md). You can also run `rails cost_of_living:refresh_snapshots` (optionally `LIMIT=5`) to fetch the latest prices.
 
 6. **Run Server**:
    ```bash
