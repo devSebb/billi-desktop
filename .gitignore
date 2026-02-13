@@ -54,3 +54,10 @@ yarn-debug.log*
 ehthumbs.db
 Thumbs.db
 
+# Cursor plans, audits, and AI-generated docs (README stays tracked)
+prd.md
+*_AUDIT*.md
+*AUDIT*.md
+.cursor/**/*.md
+docs/*AUDIT*.md
+docs/*REPORT*.md

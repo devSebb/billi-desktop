@@ -78,8 +78,14 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
+# On Render, attach a Postgres instance; DATABASE_URL is set automatically when you link the DB.
+# Pool is kept from default for Puma thread count.
 production:
   <<: *default
+  <% if ENV["DATABASE_URL"].present? %>
+  url: <%= ENV["DATABASE_URL"] %>
+  <% else %>
   database: billi_production
   username: billi
   password: <%= ENV["BILLI_DATABASE_PASSWORD"] %>
+  <% end %>
