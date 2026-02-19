@@ -104,6 +104,8 @@ Rails.application.configure do
 
   # Allow Render and optional custom domain. /up is excluded for health checks.
   config.hosts << /.*\.onrender\.com/
+  config.hosts << "tripstein.app"
+  config.hosts << "www.tripstein.app"
   config.hosts << ENV["APP_HOST"] if ENV["APP_HOST"].present?
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
