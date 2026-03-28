@@ -66,6 +66,6 @@ end
 
 gem "unsplash", "~> 3.1"
 
-gem "dotenv-rails", "~> 3.1", :groups => [:development, :test]
+gem "dotenv-rails", "~> 3.2", :groups => [:development, :test]
 
 gem "ostruct", "~> 0.6.3"
